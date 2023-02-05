@@ -19,6 +19,7 @@ from django.utils.translation import gettext_lazy as _
 from .forms import CreateUserForm
 from django import forms
 from .utilities import app_notifications
+from contents.models import Content
 
 def loginPage(request):
     if request.user.is_authenticated:
@@ -42,10 +43,8 @@ def loginPage(request):
 
 # @login_required(login_url='login.html')    
 def Blogs(request):
-    return render(request, 'home.html')  
-    # username = request.user
-    # context={'user': username}
-    # return render(request, 'dsh.html', context)    
+    Contents = Content.objects.all() 
+    return render(request, 'home.html', {'contents': Contents})  
 
 
 def registrationPage(request):
