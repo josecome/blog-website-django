@@ -42,7 +42,7 @@ def loginPage(request):
 
 # @login_required(login_url='login.html')    
 def Blogs(request):
-    return redirect('/')  
+    return render(request, 'home.html')  
     # username = request.user
     # context={'user': username}
     # return render(request, 'dsh.html', context)    
