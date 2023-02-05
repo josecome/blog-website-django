@@ -16,13 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from blog import views
+from django.conf.urls import include
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('', views.Blogs, name="home"),
+    path('', views.Blogs, name="home"),    
     path('login/', views.loginPage, name='login'),
     path('admin/', admin.site.urls),
     path('logout/', views.logout_view, name='logout'),
     path('register/', views.registrationPage, name='register'),
     path('change-password/', auth_views.PasswordChangeView.as_view()),
+    path('contents/', include('contents.urls'))
 ]
