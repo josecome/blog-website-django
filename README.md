@@ -1,5 +1,7 @@
 # Blog Webpage
 
+ <img src="blog/static/blog.jpg">
+
 This project aim to demostrate how Blog webpage can be developed using Python + Django
 
 ## To run the project

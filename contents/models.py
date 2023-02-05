@@ -4,7 +4,8 @@ from django.db import models
 class Content(models.Model):
     # my_id = models.AutoField(primary_key=True) If column has different name than id  
     id = models.IntegerField(primary_key=True)  
-    title = models.CharField(max_length=120)  
+    title = models.CharField(max_length=120)
+    topic = models.CharField(max_length=40, default="BLOG")  
     body = models.TextField()  
     author = models.CharField(max_length=40)  
     author_updated = models.CharField(max_length=40)      

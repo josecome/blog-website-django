@@ -28,29 +28,31 @@
 </header>
 <main>
 <div style="width: 80%; padding: 20px;">
-{% for content in contents %}      
+{% for content in contents %}     
+<div style="width: 80%; padding: 20px;"> 
 <table>
     <tr>
-        <td rowspan="4" style="background-color: #AED6F1;">
-            <h1 style="color: white;">HTML 5</h1>
+        <td rowspan="4" style="background-color: #AED6F1; width: 160px;">
+            <h1 style="color: white; text-align: center;">{{ content.topic }}</h1>
         </td>
     </tr>
     <tr>
         <th>
-          Introduction to HTML5
+          {{ content.title }}
         </th>
     </tr>
     <tr>
         <td>
-            HTML5 is a markup language used in World Wide Web...
+            {{ content.body }}
         </td>
     </tr>
     <tr>
         <td>
-            <span style="float: left; text-decoration: none;"></span>Autor: <a href="#" style="text-decoration: none;">Jos&eacute; Com&eacute;</a></span>
+            <span style="float: left; text-decoration: none;"></span>Autor: <a href="#" style="text-decoration: none;">{{ content.author }}</a></span>
         </td>
     </tr>
 </table>
+</div>
 {% endfor %}
 </div>
 </main>

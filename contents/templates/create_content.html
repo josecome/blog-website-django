@@ -7,7 +7,7 @@
     <title>Create Content</title>
 </head>
 <body>
-    <form action="/your-name/" method="post">
+    <form action="/contents/create_content_add/" method="POST">
         {% csrf_token %}
         {{ form.as_p }}
         <p>In case you are not the author, please type author name in author field</p>
