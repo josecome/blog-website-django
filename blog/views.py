@@ -40,11 +40,12 @@ def loginPage(request):
     return render(request, 'login.html')
     
 
-@login_required(login_url='login.html')    
-def Dashboard(request):
-    username = request.user
-    context={'user': username}
-    return render(request, 'dsh.html', context)    
+# @login_required(login_url='login.html')    
+def Blogs(request):
+    return redirect('/')  
+    # username = request.user
+    # context={'user': username}
+    # return render(request, 'dsh.html', context)    
 
 
 def registrationPage(request):
