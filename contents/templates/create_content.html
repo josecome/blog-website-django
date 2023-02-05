@@ -9,7 +9,8 @@
 <body>
     <form action="/your-name/" method="post">
         {% csrf_token %}
-        {{ form }}
+        {{ form.as_p }}
+        <p>In case you are not the author, please type author name in author field</p>
         <input type="submit" value="Submit">
     </form>
 </body>

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect  
-from forms import ContentForm   
+from .forms import ContentForm   
 from django.template import RequestContext
 
 
@@ -8,7 +8,8 @@ def Contents(request):
 
 
 def Create_Content(request):
-    return render(request, 'create_content.html')  
+    form = ContentForm() 
+    return render(request, 'create_content.html', {'form': form})  
 
 
 def Create_Content_Insert(request):

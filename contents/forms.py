@@ -5,4 +5,5 @@ from .models import Content
 class ContentForm(forms.ModelForm):  
     class Meta:  
         model = Content
-        fields = "__all__"  
+        fields = ["title", "body", "author"]
+        # fields = "__all__"  
