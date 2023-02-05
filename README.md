@@ -4,7 +4,7 @@
 
 This project aim to demostrate how Blog webpage can be developed using Python + Django
 
-Can be add more topics using the follow link [http://127.0.0.1:8000/contents/create_content/]
+To add more topics use the follow link [http://127.0.0.1:8000/contents/create_content/]
 
 ## To run the project
 
