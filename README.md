@@ -6,6 +6,8 @@ This project aim to demostrate how Blog webpage can be developed using Python + 
 
 To add more topics use the follow link [http://127.0.0.1:8000/contents/create_content/]
 
+ <img src="blog/static/form.jpg">
+
 ## To run the project
 
 Type in commandline
