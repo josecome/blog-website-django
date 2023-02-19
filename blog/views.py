@@ -48,7 +48,7 @@ def Blogs(request):
 
 
 def Content(request, id):
-    page_content = Contents.get(id=id)
+    page_content = Contents.objects.get(id=id)
     return render(request, 'content.html', {'page_content': page_content})      
 
 
