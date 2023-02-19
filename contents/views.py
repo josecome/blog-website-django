@@ -15,11 +15,6 @@ def Create_Content(request):
     return render(request, 'create_content.html', {'form': form})  
 
 
-def Content(request, id):
-    page_content = Content.get(id=id)
-    return render(request, 'create_content.html', {'page_content': page_content})      
-
-
 def Create_Content_Insert(request):
     if request.method == "POST":  
         form = ContentForm(request.POST)  

@@ -25,6 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('logout/', views.logout_view, name='logout'),
     path('register/', views.registrationPage, name='register'),
+    path('content/<int:id>', views.Content, name="content"),
     path('change-password/', auth_views.PasswordChangeView.as_view()),
     path('contents/', include('contents.urls'))
 ]
