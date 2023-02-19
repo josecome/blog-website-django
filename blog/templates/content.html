@@ -3,6 +3,6 @@
 {% block content %}
 <div style="width: 80%; padding: 20px;">
 <h1>{{ page_content.title }}</h1>
-{{ page_content.body }}
+{{ page_content.body|linebreaks }}
 </div>
 {% endblock content %}    
