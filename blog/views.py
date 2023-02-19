@@ -48,12 +48,7 @@ def Blogs(request):
     return render(request, 'home.html', {'contents': Contents_list})  
 
 
-def Content(request, id):
-    cursor = connections['default'].cursor()
-    ss = "It is a markup language used to build web pages. HTML is an English acronym that means Hypertext Markup Language or in Portuguese Hypertext Markup Language. This is not a programming language but a markup language that contains a set of tags.\n\rIt was initially created to easily share documents in a research area at the European Council for Nuclear Research in Switzerland. In this language, codes (tags) delimit specific contents, according to their own syntax. HTML is designed to create web pages, when another programming resource is not included, the page created by it becomes static.\n\rNowadays it is easy to learn how to create a simple web page, since over the years the code involved and the demands of the market have made this work quite complex. To make the pages created through dynamic html it is necessary to add other languages like css, javascripts and others like: php, java, vb.net, c#, etc."
-    tt = "HTML 5"
-    cursor.execute("update contents set body = %s where topic = %s", [ss, tt])
-    
+def Content(request, id):      
     page_content = Contents.objects.get(id=id)
     return render(request, 'content.html', {'page_content': page_content})      
 
