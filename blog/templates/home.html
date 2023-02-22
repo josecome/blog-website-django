@@ -28,5 +28,15 @@
 </table>
 </div>
 {% endfor %}
+<div id="root"></div>
+<script type="text/babel">
+    function App() {
+        return (
+           <div>Loading</div>
+        )   
+    }
+    const html_root = document.getElementById('root');
+    ReactDOM.createRoot(html_root).render(<App />);
+</script>
 </div>
 {% endblock content %}
