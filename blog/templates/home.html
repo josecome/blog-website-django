@@ -31,9 +31,27 @@
 <div id="root"></div>
 <script type="text/babel">
     function App() {
+        const { useState, useEffect } = React;
+        const [post, setPost] = useState([]);
+
+        useEffect(() => {
+            axios.get("").then((data) => {
+                console.log(data);
+                setPost(data?.data);
+            });
+        }, []);
+
         return (
-           <div>Loading</div>
-        )   
+                <div>
+                    {post.map((item, i) => {
+                    return (
+                        <div key={i}>
+                            <p>{item?.title}</p>
+                        </div>
+                    );
+                })}
+            </div>
+        );  
     }
     const html_root = document.getElementById('root');
     ReactDOM.createRoot(html_root).render(<App />);
