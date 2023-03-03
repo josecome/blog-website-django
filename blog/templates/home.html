@@ -25,18 +25,28 @@
             width: "100px",
             height: "100px",
             float: "left",
-            padding: "10px"
+            padding: "10px",
+            textAlign: "center",
+            margin: "auto",
+            fontSize: "32px"
         };
         const divstyle = {
             height: "120px"
-        }
+        };
+        const divcontstyle = {
+            height: "100px",
+            paddingLeft: "20px" 
+        };
         return (
                 <div>  
                     { post.map(p => ( 
                         <div key={ p.pk } style={ divstyle }>
-                            <label style={ topicstyle }>{ p.fields.topic }</label><br />
-                            <a href="">{ p.fields.title }</a><br />
-                            { p.fields.body.slice(0, 200) + "..." } <br /><br />                   
+                            <label style={ topicstyle }>{ p.fields.topic }</label>
+                            <div style={ divcontstyle }>
+                                <a href={ p.fields.lnk }>{ p.fields.title }</a><br />
+                                { p.fields.body.slice(0, 200) + "..." }
+                            </div>
+                            <br /><br />                   
                         </div> 
                     )) }                            
                 </div>
