@@ -35,22 +35,20 @@
         const [post, setPost] = useState([]);
 
         useEffect(() => {
-            axios.get("").then((data) => {
+            axios.get("postlist").then((data) => {
                 console.log(data);
                 setPost(data?.data);
             });
         }, []);
 
         return (
-                <div>
-                    {post.map((item, i) => {
-                    return (
-                        <div key={i}>
-                            <p>{item?.title}</p>
-                        </div>
-                    );
-                })}
-            </div>
+                <div>                 
+                    <ul>
+                        {post.map(p => (
+                          <li key={p.id}>{p.title}</li>
+                        ))}
+                    </ul>               
+                </div>
         );  
     }
     const html_root = document.getElementById('root');

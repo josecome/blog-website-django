@@ -21,6 +21,9 @@ from django import forms
 from .utilities import app_notifications
 from contents.models import Content as Contents
 from django.db import connections
+from django.http import HttpResponse
+from django.core import serializers
+import json
 
 def loginPage(request):
     if request.user.is_authenticated:
@@ -43,9 +46,14 @@ def loginPage(request):
     
 
 # @login_required(login_url='login.html')    
-def Blogs(request):
+def Blogs(request):    
+    return render(request, 'home.html')  
+
+
+def PostList(request):    
     Contents_list = Contents.objects.all() 
-    return render(request, 'home.html', {'contents': Contents_list})  
+    data = serializers.serialize('json', Contents_list)
+    return HttpResponse(data, content_type="application/json")
 
 
 def Content(request, id):      
