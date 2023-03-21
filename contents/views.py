@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect  
 from .forms import ContentForm   
 from django.template import RequestContext
+from django.http import HttpResponse
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 import datetime
@@ -24,12 +25,13 @@ def Create_Content_Insert(request):
                 form.author = request.user
                 form.date_created = datetime.datetime.now()
                 form.date_updated = datetime.datetime.now()
+                # return HttpResponse(request.POST.items())
                 form.save()  
                 messages.success(request, _('Successfull logged in'))
                 return redirect('/contents/create_content')  
             except Exception as e:  
-                pass
-
+                return HttpResponse(e)
+                # pass
         else:    
             form = ContentForm() 
             messages.info(request, _('Please, fill form'))
