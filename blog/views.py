@@ -56,8 +56,9 @@ def PostList(request):
     return HttpResponse(data, content_type="application/json")
 
 
-def Content(request, id):      
-    page_content = Contents.objects.get(id=id)
+def Content(request, lnk):      
+    #page_content = Contents.objects.get(id=id)
+    page_content = Contents.objects.get(lnk=lnk)
     return render(request, 'content.html', {'page_content': page_content})      
 
 
