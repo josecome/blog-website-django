@@ -25,14 +25,16 @@ from django.http import HttpResponse
 from django.core import serializers
 import json
 
+
 def loginPage(request):
     if request.user.is_authenticated:
+        messages.success(request, _('AAAA'))
         return redirect('/')
     else:    
         if request.method == 'POST':
-            username = request.POST['username']
-            password = request.POST['password']
-            user = authenticate(request, username=username, password=password)               
+            username = request.POST["username"]
+            password = request.POST["password"]
+            user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
                 # Redirect to a success page.
