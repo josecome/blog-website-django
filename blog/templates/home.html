@@ -22,8 +22,7 @@
         }, []);
         const topicstyle = {
             backgroundColor: "#AED6F1",
-            width: "100px",
-            height: "100px",
+            width: "140px",
             float: "left",
             margin: "10%",
             textAlign: "center",
@@ -42,12 +41,24 @@
         return (
                 <div>  
                     { post.map(p => ( 
-                        <div key={ p.pk } style={ divstyle }>
-                            <label style={ topicstyle }>{ p.fields.topic }</label>
-                            <div style={ divcontstyle }>
-                                <a href={ 'content/' + p.fields.lnk }>{ p.fields.title }</a><br />
-                                { p.fields.body.slice(0, 200) + "..." }
-                            </div>
+                        <div key={ p.pk }>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td rowspan={2}>
+                                        <label style={ topicstyle }>{ p.fields.topic }</label>
+                                        </td>
+                                        <td>
+                                            <a href={ 'content/' + p.fields.lnk }>{ p.fields.title }</a>
+                                        </td>    
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            { p.fields.body.slice(0, 200) + "..." }
+                                        </td>
+                                    </tr>    
+                                </tbody>    
+                            </table>    
                             <br /><br />                   
                         </div> 
                     )) }                            
