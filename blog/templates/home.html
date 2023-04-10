@@ -20,16 +20,25 @@
                 setPost(data?.data);
             });
         }, []);
-        const topicstyle = {
+        const userStylePic = {
             backgroundColor: "#AED6F1",
-            width: "140px",
+            width: "50px",
+            height: "50px",
             float: "left",
-            margin: "10%",
             textAlign: "center",
-            borderRadius: "20px",
-            margin: "auto",
+            borderRadius: "50%",
             fontSize: "32px",
-            paddingRight: "10px"
+            paddingLeft: "10px",
+        };
+        const userStylePic2 = {
+            backgroundColor: "#AED6F1",
+            width: "20px",
+            height: "20px",
+            float: "left",
+            textAlign: "center",
+            borderRadius: "50%",
+            fontSize: "12px",
+            paddingLeft: "10px",
         };
         const divstyle = {
             height: "120px"
@@ -38,6 +47,49 @@
             height: "100px",
             marginRight: "10%"
         };
+        const styleUserProfile = {
+            textAlign: "left",
+        };
+        const optionsStyle = {
+            paddingLeft: "10px",
+        };
+        const lineStyle = {
+            width: "100%",
+            color: "gray"
+        }
+        const divcommentStyle = {
+            width: "80%",  
+            border: "1px solid gray",
+            borderRadius: "6px",
+            textAlign: "left",
+            fontSize: "12px",
+            fontWeight: "500",
+            lineHeight: "20px",
+            listStyle: "none",
+            padding: "2px 4px",
+            display: "inline-block"
+        };
+        const commentStyle = {
+          border: "0px"
+        };
+        const commenticons = {
+          textAlign: "right"
+        };
+        const centerText = {
+            margin: "auto",
+            width: "50%",
+            padding: "2px",
+            textAlign: "center"
+        }
+        const timeOfPost = {
+            fontSize: "10px"
+        };
+        const likesStyle = {
+            backgroundColor: "#3498DB",
+            borderRadius: "50%",
+            color: "white",
+            textAlign: "center"
+        }
         return (
                 <div>  
                     { post.map(p => ( 
@@ -45,17 +97,53 @@
                             <table>
                                 <tbody>
                                     <tr>
-                                        <td rowspan={2}>
-                                        <label style={ topicstyle }>{ p.fields.topic }</label>
-                                        </td>
                                         <td>
-                                            <a href={ 'content/' + p.fields.lnk }>{ p.fields.title }</a>
+                                            <label style={ userStylePic }><span style={ centerText }>{ p.fields.topic }</span></label>
+                                            <a href={ 'content/' + p.fields.lnk } style={ styleUserProfile }>
+                                                { p.fields.title }
+                                            </a> <br />
+                                            <span style={ timeOfPost }>0 days</span>
                                         </td>    
                                     </tr>
                                     <tr>
                                         <td>
-                                            { p.fields.body.slice(0, 200) + "..." }
+                                            { p.fields.body.slice(0, 200) + "..." } <br />
+                                            <span style={ likesStyle }>
+                                                <i class="bi bi-hand-thumbs-up"></i>
+                                            </span> 20
                                         </td>
+                                    </tr> 
+                                    <tr>
+                                        <td><hr style={ lineStyle } /></td>
+                                    </tr>      
+                                    <tr>
+                                        <td>
+                                            <i class="bi bi-hand-thumbs-up"></i> Like   
+                                            <i class="bi bi-chat-left" style={ optionsStyle }></i> comment    
+                                            <i class="bi bi-share" style={ optionsStyle }></i> share
+                                        </td>
+                                    </tr>  
+                                    <tr>
+                                        <td><hr style={ lineStyle } /></td>
+                                    </tr>   
+                                    <tr>
+                                        <td>
+                                            <label style={ userStylePic2 }><span style={ centerText }>{ p.fields.topic }</span></label>
+                                            <div style={ divcommentStyle } >
+                                                <input type="text" style={ commentStyle }
+                                                    placeHolder="Write a comment..." />
+                                                    <span style={ commenticons }>
+                                                        <i class="bi bi-emoji-smile" style={ optionsStyle }></i>
+                                                        <i class="bi bi-image" style={ optionsStyle }></i>
+                                                        <i class="bi bi-hand-thumbs-up" style={ optionsStyle }></i>
+                                                        <i class="bi bi-hand-thumbs-down" style={ optionsStyle }></i>
+                                                        <i class="bi bi-heart" style={ optionsStyle }></i>
+                                                        <i class="bi bi-handbag" style={ optionsStyle }></i>
+
+                                                    </span>
+                                            </div>    
+
+                                        </td>    
                                     </tr>    
                                 </tbody>    
                             </table>    
