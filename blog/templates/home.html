@@ -35,10 +35,12 @@
             width: "20px",
             height: "20px",
             float: "left",
-            textAlign: "center",
             borderRadius: "50%",
-            fontSize: "12px",
+            fontSize: "12px",            
             paddingLeft: "10px",
+            display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         };
         const divstyle = {
             height: "120px"
@@ -70,16 +72,14 @@
             display: "inline-block"
         };
         const commentStyle = {
-          border: "0px"
+          border: "0px",          
         };
         const commenticons = {
-          textAlign: "right"
+          textAlign: "right",
+          float: "right",
         };
         const centerText = {
-            margin: "auto",
-            width: "50%",
-            padding: "2px",
-            textAlign: "center"
+            textAlign: "center",            
         }
         const timeOfPost = {
             fontSize: "10px"
@@ -89,17 +89,25 @@
             borderRadius: "50%",
             color: "white",
             textAlign: "center"
-        }
+        };
+        const div_content_style = {
+            backgroundColor: "white",
+            borderRadius: "26px",  
+            margin: "10px",          
+        };
+        const table_of_content_style = {
+            margin: "16px",
+        };
         return (
                 <div>  
                     { post.map(p => ( 
-                        <div key={ p.pk }>
-                            <table>
+                        <div key={ p.pk } style={ div_content_style }>
+                            <table style={ table_of_content_style }>
                                 <tbody>
                                     <tr>
                                         <td>
                                             <label style={ userStylePic }><span style={ centerText }>{ p.fields.topic }</span></label>
-                                            <a href={ 'content/' + p.fields.lnk } style={ styleUserProfile }>
+                                            <a href={ 'content/' + p.fields.link } style={ styleUserProfile }>
                                                 { p.fields.title }
                                             </a> <br />
                                             <span style={ timeOfPost }>0 days</span>
@@ -107,7 +115,7 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            { p.fields.body.slice(0, 200) + "..." } <br />
+                                            { p.fields.post_content.slice(0, 200) + "..." } <br />
                                             <span style={ likesStyle }>
                                                 <i class="bi bi-hand-thumbs-up"></i>
                                             </span> 20
@@ -128,7 +136,7 @@
                                     </tr>   
                                     <tr>
                                         <td>
-                                            <label style={ userStylePic2 }><span style={ centerText }>{ p.fields.topic }</span></label>
+                                            <label style={ userStylePic2 } class="centerText"><span>{ p.fields.topic }</span></label>
                                             <div style={ divcommentStyle } >
                                                 <input type="text" style={ commentStyle }
                                                     placeHolder="Write a comment..." />

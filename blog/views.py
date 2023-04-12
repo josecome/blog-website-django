@@ -19,7 +19,7 @@ from django.utils.translation import gettext_lazy as _
 from .forms import CreateUserForm
 from django import forms
 from .utilities import app_notifications
-from contents.models import Content as Contents
+from contents.models import Posts as Post
 from django.db import connections
 from django.http import HttpResponse
 from django.core import serializers
@@ -53,14 +53,14 @@ def Blogs(request):
 
 
 def PostList(request):    
-    Contents_list = Contents.objects.all() 
+    Contents_list = Post.objects.all() 
     data = serializers.serialize('json', Contents_list)
     return HttpResponse(data, content_type="application/json")
 
 
 def Content(request, lnk):      
     #page_content = Contents.objects.get(id=id)
-    page_content = Contents.objects.get(lnk=lnk)
+    page_content = Post.objects.get(lnk=lnk)
     return render(request, 'content.html', {'page_content': page_content})      
 
 
