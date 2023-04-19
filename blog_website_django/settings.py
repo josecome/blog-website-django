@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blog',
     'contents',
-    'django_seed'
+    'django_seed',
 ]
 
 MIDDLEWARE = [

@@ -13,13 +13,28 @@
     function App() {
         const { useState, useEffect } = React;
         const [post, setPost] = useState([]);
+        const [postlikes, setPostLikes] = useState([]);
 
         useEffect(() => {
-            axios.get("postlist").then((data) => {
-                console.log(data);
+            axios.get("postlist").then((data) => {                
                 setPost(data?.data);
             });
+            axios.get("postlikes").then((data) => {
+               var arr = {};
+               let v = data.data.split(';')
+               for (var i = 0; i < v.length; i++) {
+                    var s = v[i].split(':');
+                    if(s[0] === null || s[0] === '' || s[0] === 'null' || typeof s[0] === 'undefined') {
+                        break;
+                    }
+                    arr[s[0].trim()] = s[1].trim();
+                }
+                setPostLikes(arr);
+            });
         }, []);
+        function search(k, arr){
+            return arr[k] || 0
+    }
         const userStylePic = {
             backgroundColor: "#AED6F1",
             width: "50px",
@@ -117,8 +132,8 @@
                                         <td>
                                             { p.fields.post_content.slice(0, 200) + "..." } <br />
                                             <span style={ likesStyle }>
-                                                <i class="bi bi-hand-thumbs-up"></i>
-                                            </span> 20
+                                                <i className="bi bi-hand-thumbs-up"></i>
+                                            </span> { search(p.pk, postlikes) }
                                         </td>
                                     </tr> 
                                     <tr>
@@ -126,9 +141,9 @@
                                     </tr>      
                                     <tr>
                                         <td>
-                                            <i class="bi bi-hand-thumbs-up"></i> Like   
-                                            <i class="bi bi-chat-left" style={ optionsStyle }></i> comment    
-                                            <i class="bi bi-share" style={ optionsStyle }></i> share
+                                            <i className="bi bi-hand-thumbs-up"></i> Like   
+                                            <i className="bi bi-chat-left" style={ optionsStyle }></i> comment    
+                                            <i className="bi bi-share" style={ optionsStyle }></i> share
                                         </td>
                                     </tr>  
                                     <tr>
@@ -136,21 +151,19 @@
                                     </tr>   
                                     <tr>
                                         <td>
-                                            <label style={ userStylePic2 } class="centerText"><span>{ p.fields.topic }</span></label>
+                                            <label style={ userStylePic2 } className="centerText"><span>{ p.fields.topic }</span></label>
                                             <div style={ divcommentStyle } >
                                                 <input type="text" style={ commentStyle }
-                                                    placeHolder="Write a comment..." />
+                                                    placeholder="Write a comment..." />
                                                     <span style={ commenticons }>
-                                                        <i class="bi bi-emoji-smile" style={ optionsStyle }></i>
-                                                        <i class="bi bi-image" style={ optionsStyle }></i>
-                                                        <i class="bi bi-hand-thumbs-up" style={ optionsStyle }></i>
-                                                        <i class="bi bi-hand-thumbs-down" style={ optionsStyle }></i>
-                                                        <i class="bi bi-heart" style={ optionsStyle }></i>
-                                                        <i class="bi bi-handbag" style={ optionsStyle }></i>
-
+                                                        <i className="bi bi-emoji-smile" style={ optionsStyle }></i>
+                                                        <i className="bi bi-image" style={ optionsStyle }></i>
+                                                        <i className="bi bi-hand-thumbs-up" style={ optionsStyle }></i>
+                                                        <i className="bi bi-hand-thumbs-down" style={ optionsStyle }></i>
+                                                        <i className="bi bi-heart" style={ optionsStyle }></i>
+                                                        <i className="bi bi-handbag" style={ optionsStyle }></i>
                                                     </span>
                                             </div>    
-
                                         </td>    
                                     </tr>    
                                 </tbody>    

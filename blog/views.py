@@ -19,10 +19,13 @@ from django.utils.translation import gettext_lazy as _
 from .forms import CreateUserForm
 from django import forms
 from .utilities import app_notifications
-from contents.models import Posts as Post
+from contents.models import Posts as Post, Likes as Like
 from django.db import connections
 from django.http import HttpResponse
 from django.core import serializers
+from django.db import connection
+from django.db.models import Count
+from django.http import JsonResponse
 import json
 
 
@@ -56,6 +59,15 @@ def PostList(request):
     Contents_list = Post.objects.all() 
     data = serializers.serialize('json', Contents_list)
     return HttpResponse(data, content_type="application/json")
+
+
+def PostLikes(request):
+    data = Like.objects.all().values('post_id').annotate(total=Count('post_id')).order_by('total')
+    array_data = ''
+    for d in data:
+        array_data += str(d['post_id']) + ":" + str(d['total']) + ";"
+        
+    return HttpResponse(array_data)
 
 
 def Content(request, lnk):      
