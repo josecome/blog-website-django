@@ -70,6 +70,15 @@ def PostLikes(request):
     return HttpResponse(array_data)
 
 
+def PostComments(request):
+    data = Like.objects.all().values('post_id').annotate(total=Count('post_id')).order_by('total')
+    array_data = ''
+    for d in data:
+        array_data += str(d['post_id']) + ":" + str(d['total']) + ";"
+        
+    return HttpResponse(array_data)
+
+
 def Content(request, lnk):      
     #page_content = Contents.objects.get(id=id)
     page_content = Post.objects.get(lnk=lnk)
