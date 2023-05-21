@@ -29,6 +29,7 @@ urlpatterns = [
     path('', views.Blogs, name="home"),    
     path('postlist/', views.PostList, name="postlist"),    
     path('postlikes/', views.PostLikes, name="postlikes"),
+    path('postcomments/', views.PostComments, name="postcomments"),
     path('login/', views.loginPage, name='login'),
     path('admin/', admin.site.urls),
     path('logout/', views.logout_view, name='logout'),
@@ -37,7 +38,7 @@ urlpatterns = [
     path('content/<str:lnk>', views.Content, name="content"),
     path('change-password/', auth_views.PasswordChangeView.as_view()),
     path('contents/', include('contents.urls')),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('api/auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

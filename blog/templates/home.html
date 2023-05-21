@@ -14,12 +14,20 @@
         const { useState, useEffect } = React;
         const [post, setPost] = useState([]);
         const [postlikes, setPostLikes] = useState([]);
+        const [postComments, setPostComments] = useState([]);
 
         useEffect(() => {
             axios.get("postlist").then((data) => {                
                 setPost(data?.data);
             });
-            axios.get("postlikes").then((data) => {
+            getData("postlikes");
+            getData("postcomments");
+        }, []);
+        function search(k, arr) {
+            return arr[k] || 0
+        };
+        async function getData(pg) {
+           await axios.get(pg).then((data) => {
                var arr = {};
                let v = data.data.split(';')
                for (var i = 0; i < v.length; i++) {
@@ -29,12 +37,15 @@
                     }
                     arr[s[0].trim()] = s[1].trim();
                 }
-                setPostLikes(arr);
-            });
-        }, []);
-        function search(k, arr){
-            return arr[k] || 0
-    }
+                if(pg === "postlikes") {
+                   setPostLikes(arr);                    
+                }
+                else if(pg === "postcomments") {
+                    setPostComments(arr); 
+                }
+                
+            })
+        };
         const userStylePic = {
             backgroundColor: "#AED6F1",
             width: "50px",
@@ -113,6 +124,9 @@
         const table_of_content_style = {
             margin: "16px",
         };
+        const commentMargin = {
+            marginLeft: "16px",
+        };
         return (
                 <div>  
                     { post.map(p => ( 
@@ -134,7 +148,10 @@
                                             <span style={ likesStyle }>
                                                 <i className="bi bi-hand-thumbs-up"></i>
                                             </span> { search(p.pk, postlikes) }
-                                        </td>
+                                            <span style={ commentMargin }>
+                                                <i className="bi bi-chat-left"></i>
+                                            </span> { search(p.pk, postComments) }                    
+                                        </td>                                   
                                     </tr> 
                                     <tr>
                                         <td><hr style={ lineStyle } /></td>

@@ -19,7 +19,7 @@ from django.utils.translation import gettext_lazy as _
 from .forms import CreateUserForm
 from django import forms
 from .utilities import app_notifications
-from contents.models import Posts as Post, Likes as Like
+from contents.models import Posts as Post, Likes as Like, Comments as Comment
 from django.db import connections
 from django.http import HttpResponse
 from django.core import serializers
@@ -71,7 +71,7 @@ def PostLikes(request):
 
 
 def PostComments(request):
-    data = Like.objects.all().values('post_id').annotate(total=Count('post_id')).order_by('total')
+    data = Comment.objects.all().values('post_id').annotate(total=Count('post_id')).order_by('total')
     array_data = ''
     for d in data:
         array_data += str(d['post_id']) + ":" + str(d['total']) + ";"
