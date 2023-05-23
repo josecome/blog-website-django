@@ -17,7 +17,7 @@
         const [postComments, setPostComments] = useState([]);
 
         useEffect(() => {
-            axios.get("postlist").then((data) => {                
+            axios.get("postlist").then((data) => {      
                 setPost(data?.data);
             });
             getData("postlikes");
@@ -46,6 +46,23 @@
                 
             })
         };
+        async function sendData(vtype_of_like, vpost_id, vtxt) {
+            let rs_response = ""
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const v = {"post_id": vpost_id, "type_of_like": vtype_of_like, "txt": vtxt }            
+            await axios.post('/addremovelike/', v, 
+                {
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    }
+                })
+                .then((response) => {
+                    rs_response = response.data
+                    console.log("rs: " + rs_response)
+                }, (error) => {
+                    rs_response = error;
+                });
+        }
         const userStylePic = {
             backgroundColor: "#AED6F1",
             width: "50px",
@@ -158,7 +175,7 @@
                                     </tr>      
                                     <tr>
                                         <td>
-                                            <i className="bi bi-hand-thumbs-up"></i> Like   
+                                            <i className="bi bi-hand-thumbs-up" onClick={() => sendData('like', p.pk, '') }></i> Like   
                                             <i className="bi bi-chat-left" style={ optionsStyle }></i> comment    
                                             <i className="bi bi-share" style={ optionsStyle }></i> share
                                         </td>

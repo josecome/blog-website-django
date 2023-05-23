@@ -30,6 +30,7 @@ urlpatterns = [
     path('postlist/', views.PostList, name="postlist"),    
     path('postlikes/', views.PostLikes, name="postlikes"),
     path('postcomments/', views.PostComments, name="postcomments"),
+    path('addremovelike/', views.addRemoveLike, name="addremovelike"),
     path('login/', views.loginPage, name='login'),
     path('admin/', admin.site.urls),
     path('logout/', views.logout_view, name='logout'),

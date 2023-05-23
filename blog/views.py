@@ -26,6 +26,7 @@ from django.core import serializers
 from django.db import connection
 from django.db.models import Count
 from django.http import JsonResponse
+from datetime import datetime
 import json
 
 
@@ -77,6 +78,27 @@ def PostComments(request):
         array_data += str(d['post_id']) + ":" + str(d['total']) + ";"
         
     return HttpResponse(array_data)
+
+
+def addRemoveLike(request):
+    print('==========begin==========')
+    data = json.loads(request.body.decode())
+    print('p: ' + str(data))
+    res_data = {'result': 'added'} #If not liked before
+    val_type_of_like = 'test' #request.POST['type_of_like']
+    val_post_liked_link = 'test'
+    val_date_created = datetime.now()
+    val_date_updated = datetime.now()
+    val_post_id = data['post_id']
+    val_user_id = 1 #request.user.id
+    new_like = Like.objects.create(type_of_like = val_type_of_like, post_liked_link = val_post_liked_link, 
+                                date_created = val_date_created, date_updated = val_date_updated, 
+                                post_id_id = val_post_id, user_id_id = val_user_id)
+
+    if False:
+        res_data = {'result': 'removed'} #If liked before
+
+    return HttpResponse(res_data)
 
 
 def Content(request, lnk):      
