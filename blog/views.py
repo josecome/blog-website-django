@@ -101,6 +101,27 @@ def addRemoveLike(request):
     return HttpResponse(res_data)
 
 
+def addComment(request):
+    print('==========begin==========')
+    data = json.loads(request.body.decode())
+    print('p: ' + str(data))
+    res_data = {'result': 'added'} #If not liked before
+    val_post_commented_link = 'test'
+    val_date_created = datetime.now()
+    val_date_updated = datetime.now()
+    val_post_id = data['post_id']
+    val_txt = data['txt']
+    val_user_id = 1 #request.user.id
+    new_comment = Comment.objects.create(post_commented_link = val_post_commented_link, 
+                                date_created = val_date_created, date_updated = val_date_updated, 
+                                post_id_id = val_post_id, user_id_id = val_user_id, comment = val_txt)
+
+    if False:
+        res_data = {'result': 'removed'} #If liked before
+
+    return HttpResponse(res_data)
+
+
 def Content(request, lnk):      
     #page_content = Contents.objects.get(id=id)
     page_content = Post.objects.get(lnk=lnk)

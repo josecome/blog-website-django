@@ -15,18 +15,27 @@
         const [post, setPost] = useState([]);
         const [postlikes, setPostLikes] = useState([]);
         const [postComments, setPostComments] = useState([]);
+        const [commenttxt, setPostCommenttxt] = useState('');
+        const [initialState, setInitialState] = useState(false)
+        //const [countPostClick, setCountPostClick] = useState(0)
 
         useEffect(() => {
-            axios.get("postlist").then((data) => {      
-                setPost(data?.data);
-            });
+            if(!initialState){
+                axios.get("postlist").then((data) => {      
+                    setPost(data?.data);
+                });    
+                setInitialState(true)     
+            }
             getData("postlikes");
             getData("postcomments");
         }, []);
+
         function search(k, arr) {
             return arr[k] || 0
         };
+
         async function getData(pg) {
+           //setCountPostClick(countPostClick + 1)
            await axios.get(pg).then((data) => {
                var arr = {};
                let v = data.data.split(';')
@@ -46,11 +55,18 @@
                 
             })
         };
-        async function sendData(vtype_of_like, vpost_id, vtxt) {
+        async function sendData(vtype_of_like, vpost_id) {
             let rs_response = ""
+            let link = ""
+
+            if(vtype_of_like === "like") {
+                link = "/addremovelike/" 
+            } else if(vtype_of_like === "comment") {
+                link = "/addcomment/"
+            }
             const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            const v = {"post_id": vpost_id, "type_of_like": vtype_of_like, "txt": vtxt }            
-            await axios.post('/addremovelike/', v, 
+            const v = {"post_id": vpost_id, "type_of_like": vtype_of_like, "txt": commenttxt }            
+            await axios.post(link, v, 
                 {
                     headers: {
                         'X-CSRFToken': csrftoken
@@ -59,6 +75,11 @@
                 .then((response) => {
                     rs_response = response.data
                     console.log("rs: " + rs_response)
+                    if(vtype_of_like === "like") {
+                       getData("postlikes"); 
+                    } else if(vtype_of_like === "comment") {
+                       getData("postcomments");
+                    }    
                 }, (error) => {
                     rs_response = error;
                 });
@@ -144,6 +165,24 @@
         const commentMargin = {
             marginLeft: "16px",
         };
+        const btnSendComment = {
+            marginLeft: "16px",
+            color: "#3498DB",
+        };
+        const container = {
+            border: "1px solid grey",
+            display: "flex",
+        };
+        const content = {
+            flexGrow: "1",
+            margin: "5px",
+        };
+        const sidecontent = {
+            margin: "5px 5px 5px 0",
+        };
+        const removeStyle = {
+            all: "unset",
+        };
         return (
                 <div>  
                     { post.map(p => ( 
@@ -175,7 +214,7 @@
                                     </tr>      
                                     <tr>
                                         <td>
-                                            <i className="bi bi-hand-thumbs-up" onClick={() => sendData('like', p.pk, '') }></i> Like   
+                                            <i className="bi bi-hand-thumbs-up" onClick={() => sendData('like', p.pk) }></i> Like   
                                             <i className="bi bi-chat-left" style={ optionsStyle }></i> comment    
                                             <i className="bi bi-share" style={ optionsStyle }></i> share
                                         </td>
@@ -186,10 +225,12 @@
                                     <tr>
                                         <td>
                                             <label style={ userStylePic2 } className="centerText"><span>{ p.fields.topic }</span></label>
-                                            <div style={ divcommentStyle } >
-                                                <input type="text" style={ commentStyle }
+                                            <div style={ divcommentStyle, container } >
+                                                <input type="text"                                                 
+                                                    style={ commentStyle, content } 
+                                                    onChange={(e) => { setPostCommenttxt(e.target.value)}}
                                                     placeholder="Write a comment..." />
-                                                    <span style={ commenticons }>
+                                                    <span style={ commenticons, sidecontent }>
                                                         <i className="bi bi-emoji-smile" style={ optionsStyle }></i>
                                                         <i className="bi bi-image" style={ optionsStyle }></i>
                                                         <i className="bi bi-hand-thumbs-up" style={ optionsStyle }></i>
@@ -197,7 +238,10 @@
                                                         <i className="bi bi-heart" style={ optionsStyle }></i>
                                                         <i className="bi bi-handbag" style={ optionsStyle }></i>
                                                     </span>
-                                            </div>    
+                                            </div>  
+                                            <i class="bi bi-send" style={ btnSendComment } title={ "Post Comment" } onClick={() => sendData('comment', p.pk) }>
+                                                <span style={ removeStyle }>Post</span>
+                                            </i>  
                                         </td>    
                                     </tr>    
                                 </tbody>    

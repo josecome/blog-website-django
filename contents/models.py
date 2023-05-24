@@ -35,6 +35,7 @@ class Likes(models.Model):
 
 class Comments(models.Model):
     id = models.AutoField(primary_key=True)
+    comment = models.TextField(default='Without comment')   
     post_commented_link = models.CharField(max_length=80)   
     date_created = models.DateField()
     date_updated = models.DateField(null=True)
