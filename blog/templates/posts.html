@@ -11,51 +11,30 @@
 <script type="text/babel">
     
     function App() {
+
+        const pathname = window.location.pathname; 
         const { useState, useEffect } = React;
         const [post, setPost] = useState([]);
         const [postlikes, setPostLikes] = useState([]);
         const [postComments, setPostComments] = useState([]);
-        const [useratributes, setUseratributes] = useState([]);
         const [commenttxt, setPostCommenttxt] = useState('');
         const [initialState, setInitialState] = useState(false)
         //const [countPostClick, setCountPostClick] = useState(0)
 
         useEffect(() => {
             if(!initialState){
-                axios.get("postlist").then((data) => {      
+                axios.get(`posts/${ pathname }`).then((data) => {      
                     setPost(data?.data);
-                    console.log(data.data)
-                    let postids = data.data.map(i => {return i.fields.user})
-                    let ids_of_posts = String(postids.filter(onlyUnique))
-                    loadUserAtrib(ids_of_posts);
                 });    
                 setInitialState(true)     
             }
-            getData("postlikes");
-            getData("postcomments");
+            getData(`postlikes/${ pathname }`);
+            getData(`postcomments/${ pathname }`);
         }, []);
 
         function search(k, arr) {
             return arr[k] || 0
         };
-        function onlyUnique(value, index, array) {
-            return array.indexOf(value) === index;
-        };
-        async function loadUserAtrib(ids_of_posts) {
-            await axios.get('/useratrib/', { params: { ids: ids_of_posts } }).then((data) => {
-               var arr = {};
-               let v = data.data.split(';')
-               for (var i = 0; i < v.length; i++) {
-                    var s = v[i].split(':');
-                    if(s[0] === null || s[0] === '' || s[0] === 'null' || typeof s[0] === 'undefined') {
-                        break;
-                    }
-                    arr[s[0].trim()] = s[1].trim();
-                }
-                setUseratributes(arr)
-                console.log('User: ' + useratributes)
-            })
-        }
 
         async function getData(pg) {
            //setCountPostClick(countPostClick + 1)
@@ -214,10 +193,7 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <a href={ 'posts/' + search(p.fields.user, useratributes) } style={ styleUserProfile }>
-                                                <label style={ userStylePic }><span style={ centerText }>{ p.fields.topic }</span></label>
-                                            </a>
-
+                                            <label style={ userStylePic }><span style={ centerText }>{ p.fields.topic }</span></label>
                                             <a href={ 'content/' + p.fields.link } style={ styleUserProfile }>
                                                 { p.fields.title }
                                             </a> <br />

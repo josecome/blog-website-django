@@ -19,6 +19,7 @@ from django.utils.translation import gettext_lazy as _
 from .forms import CreateUserForm
 from django import forms
 from .utilities import app_notifications
+from django.contrib.auth.models import User
 from contents.models import Posts as Post, Likes as Like, Comments as Comment
 from django.db import connections
 from django.http import HttpResponse
@@ -57,9 +58,32 @@ def Blogs(request):
 
 
 def PostList(request):    
-    Contents_list = Post.objects.all() 
+    Contents_list = Post.objects.all()
+    data = serializers.serialize('json', Contents_list)
+    #print('id: ' + str(Post.objects.all()[:1].get()))
+    return HttpResponse(data, content_type="application/json")
+
+
+def PageOfPostByUser(request, username):
+    return render(request, 'posts.html')
+
+def PostbyUser(request, username):
+    user_id = int(User.objects.get(username=username).pk)    
+    Contents_list = Post.objects.filter(user_id=user_id)
     data = serializers.serialize('json', Contents_list)
     return HttpResponse(data, content_type="application/json")
+
+
+def getUserAtrib(request):
+    array_data = ''
+    aa = request.GET['ids']
+    print(aa)
+    ArrayOfIds = request.GET['ids'].split(',')
+    data = User.objects.filter(pk__in=ArrayOfIds)
+    for d in data:
+        array_data += str(d.pk) + ":" + str(d.username) + ";"
+      
+    return HttpResponse(array_data)    
 
 
 def PostLikes(request):
@@ -93,7 +117,7 @@ def addRemoveLike(request):
     val_user_id = 1 #request.user.id
     new_like = Like.objects.create(type_of_like = val_type_of_like, post_liked_link = val_post_liked_link, 
                                 date_created = val_date_created, date_updated = val_date_updated, 
-                                post_id_id = val_post_id, user_id_id = val_user_id)
+                                post_id = val_post_id, user_id = val_user_id)
 
     if False:
         res_data = {'result': 'removed'} #If liked before
@@ -114,7 +138,7 @@ def addComment(request):
     val_user_id = 1 #request.user.id
     new_comment = Comment.objects.create(post_commented_link = val_post_commented_link, 
                                 date_created = val_date_created, date_updated = val_date_updated, 
-                                post_id_id = val_post_id, user_id_id = val_user_id, comment = val_txt)
+                                post_id = val_post_id, user_id = val_user_id, comment = val_txt)
 
     if False:
         res_data = {'result': 'removed'} #If liked before
@@ -124,7 +148,7 @@ def addComment(request):
 
 def Content(request, lnk):      
     #page_content = Contents.objects.get(id=id)
-    page_content = Post.objects.get(lnk=lnk)
+    page_content = Post.objects.get(link=lnk)
     return render(request, 'content.html', {'page_content': page_content})      
 
 

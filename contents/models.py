@@ -14,7 +14,11 @@ class Posts(models.Model):
     date_created = models.DateField()
     date_updated = models.DateField(null=True)
     link = models.CharField(max_length=100)  
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)   
+    user = models.ForeignKey(User, on_delete=models.CASCADE)   
+
+    @property
+    def username(self):
+        return self.user.username
 
     class Meta:  
         db_table = "post"        
@@ -26,8 +30,8 @@ class Likes(models.Model):
     post_liked_link = models.CharField(max_length=80)   
     date_created = models.DateField()
     date_updated = models.DateField(null=True)
-    post_id = models.ForeignKey(Posts, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Posts, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:  
         db_table = "likes"        
@@ -39,8 +43,8 @@ class Comments(models.Model):
     post_commented_link = models.CharField(max_length=80)   
     date_created = models.DateField()
     date_updated = models.DateField(null=True)
-    post_id = models.ForeignKey(Posts, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE) 
+    post = models.ForeignKey(Posts, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE) 
 
     class Meta:  
         db_table = "comments"     
@@ -51,8 +55,8 @@ class Shares(models.Model):
     post_shared_link = models.CharField(max_length=80)   
     date_created = models.DateField()
     date_updated = models.DateField(null=True)
-    post_id = models.ForeignKey(Posts, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Posts, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:  
         db_table = "contents"       

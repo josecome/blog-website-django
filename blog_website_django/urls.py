@@ -27,11 +27,14 @@ from rest_framework.routers import DefaultRouter
 
 urlpatterns = [
     path('', views.Blogs, name="home"),    
-    path('postlist/', views.PostList, name="postlist"),    
+    path('postlist/', views.PostList, name="postlist"),  
+    path('posts/<str:username>', views.PageOfPostByUser, name="posts"),
+    path('postscontent/<str:username>', views.PostbyUser, name="postscontent"),
     path('postlikes/', views.PostLikes, name="postlikes"),
     path('postcomments/', views.PostComments, name="postcomments"),
     path('addremovelike/', views.addRemoveLike, name="addremovelike"),
     path('addcomment/', views.addComment, name="addcomment"),
+    path('useratrib/', views.getUserAtrib, name="useratrib"),    
     path('login/', views.loginPage, name='login'),
     path('admin/', admin.site.urls),
     path('logout/', views.logout_view, name='logout'),
