@@ -11,9 +11,9 @@
 <script type="text/babel">
     
     function App() {
-
-        const pathname = window.location.pathname; 
         const { useState, useEffect } = React;
+        const path = window.location.pathname.replace('/posts/', '');
+        const [pathname, setPathname] = useState('' + path);         
         const [post, setPost] = useState([]);
         const [postlikes, setPostLikes] = useState([]);
         const [postComments, setPostComments] = useState([]);
@@ -23,13 +23,15 @@
 
         useEffect(() => {
             if(!initialState){
-                axios.get(`posts/${ pathname }`).then((data) => {      
+                console.log('pathname: ' + pathname)
+                axios.get(`/postscontent/${ pathname }`).then((data) => {      
+                    console.log(data.data)
                     setPost(data?.data);
                 });    
                 setInitialState(true)     
             }
-            getData(`postlikes/${ pathname }`);
-            getData(`postcomments/${ pathname }`);
+            getData('/postlikes/');
+            getData('/postcomments/');
         }, []);
 
         function search(k, arr) {
@@ -187,6 +189,7 @@
         };
         return (
                 <div>  
+                    <h1>Posts of User: { pathname }</h1>
                     { post.map(p => ( 
                         <div key={ p.pk } style={ div_content_style }>
                             <table style={ table_of_content_style }>
@@ -241,7 +244,7 @@
                                                         <i className="bi bi-handbag" style={ optionsStyle }></i>
                                                     </span>
                                             </div>  
-                                            <i class="bi bi-send" style={ btnSendComment } title={ "Post Comment" } onClick={() => sendData('comment', p.pk) }>
+                                            <i className="bi bi-send" style={ btnSendComment } title={ "Post Comment" } onClick={() => sendData('comment', p.pk) }>
                                                 <span style={ removeStyle }>Post</span>
                                             </i>  
                                         </td>    

@@ -207,7 +207,7 @@
             all: "unset",
         };
         return (
-                <div>  
+                <div>                      
                     { post.map(p => ( 
                         <div key={ p.pk } style={ div_content_style }>
                             <table style={ table_of_content_style }>
@@ -265,7 +265,7 @@
                                                         <i className="bi bi-handbag" style={ optionsStyle }></i>
                                                     </span>
                                             </div>  
-                                            <i class="bi bi-send" style={ btnSendComment } title={ "Post Comment" } onClick={() => sendData('comment', p.pk) }>
+                                            <i className="bi bi-send" style={ btnSendComment } title={ "Post Comment" } onClick={() => sendData('comment', p.pk) }>
                                                 <span style={ removeStyle }>Post</span>
                                             </i>  
                                         </td>    
