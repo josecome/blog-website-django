@@ -67,11 +67,19 @@ def PostList(request):
 def PageOfPostByUser(request, username):
     return render(request, 'posts.html')
 
+
 def PostbyUser(request, username):
     user_id = int(User.objects.get(username=username).pk)    
     Contents_list = Post.objects.filter(user_id=user_id)
     data = serializers.serialize('json', Contents_list)
     return HttpResponse(data, content_type="application/json")
+
+
+def getPostByLink(request, link):
+    data = Post.objects.filter(link=link)
+    json_data = serializers.serialize('json', data)
+
+    return HttpResponse(json_data, content_type="application/json")
 
 
 def getUserAtrib(request):

@@ -3,6 +3,7 @@ from .forms import ContentForm
 from django.template import RequestContext
 from django.http import HttpResponse
 from django.contrib import messages
+from .models import Posts as Post
 from django.utils.translation import gettext_lazy as _
 import datetime
 
@@ -13,6 +14,12 @@ def Contents(request):
 
 def Create_Content(request):     
     form = ContentForm() 
+    return render(request, 'create_content.html', {'form': form})  
+
+
+def Update_Content(request, lnk):   
+    data = Post.objects.get(link=lnk) 
+    form = ContentForm(instance=data) #If not use instance throw error
     return render(request, 'create_content.html', {'form': form})  
 
 

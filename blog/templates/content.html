@@ -2,7 +2,14 @@
 {% block title %}Content{% endblock %}
 {% block content %}
 <div style="width: 80%; padding: 20px;">
-<h1 style="color: blue;">{{ page_content.title }}<a href="/contents/create_content/{{ page_content.link }}/" class="bi bi-pencil" style="padding-left: 6px; color: grey;" title="Edit Content"></a></h1>
-{{ page_content.body|linebreaks }}
+<h1 style="color: blue;">{{ page_content.title }}
+    <a href="/contents/create_content/{{ page_content.link }}/" 
+        class="bi bi-pencil" 
+        style="padding-left: 6px; 
+        color: grey;" 
+        title="Edit Content">
+    </a>
+</h1>
+{{ page_content.post_content|linebreaks }}
 </div>
 {% endblock content %}    
