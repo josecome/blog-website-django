@@ -2,14 +2,17 @@
 {% block title %}Home{% endblock %}
 {% block content %}
 <div id="app" style="width: 80%; padding: 20px;">
-  
+    <div v-for="p in post" :key="p.pk" class="div_content_style">
+        [[ p ]]
+    </div>  
 </div>
 <script>
-    const { createApp, ref } = Vue
+    const { createApp, ref, onMounted } = Vue
   
     createApp({
       delimiters: ['[[',']]'],  
       setup() {
+        const post = ref([])
         const postlikes = ref([]);
         const postComments = ref([]);
         const useratributes = ref([]);
@@ -64,10 +67,10 @@
                     arr[s[0].trim()] = s[1].trim();
                 }
                 if(pg === "postlikes") {
-                   postLikes.value = arr;                    
+                   postlikes.value = arr;                    
                 }
                 else if(pg === "postcomments") {
-                    postComments = arr; 
+                    postcomments = arr; 
                 }
                 
             })
