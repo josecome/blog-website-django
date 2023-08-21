@@ -2,9 +2,9 @@
 {% block title %}Home{% endblock %}
 {% block content %}
 <div id="app" style="width: 80%; padding: 20px;">
-    <div v-for="p in post" :key="p.pk" class="div_content_style">
-        [[ p ]]
-    </div>  
+    <div v-for="p in posts" class="div_content_style">
+        [[ p.pk ]]
+    </div>
 </div>
 <script>
     const { createApp, ref, onMounted } = Vue
@@ -12,22 +12,23 @@
     createApp({
       delimiters: ['[[',']]'],  
       setup() {
-        const post = ref([])
+        const posts = ref([])
         const postlikes = ref([]);
-        const postComments = ref([]);
+        const postcomments = ref([]);
         const useratributes = ref([]);
         const commenttxt = ref('');
         const initialState = ref(false)
+        
         onMounted(() => {
-            if(!initialState){
+            if(!initialState.value){
                 axios.get("postlist").then((data) => {      
-                    post.value = data;
-                    console.log(data.data)
+                    posts.value = data.data;
+                    console.log(posts.value)
                     let postids = data.data.map(i => {return i.fields.user})
                     let ids_of_posts = String(postids.filter(onlyUnique))
                     loadUserAtrib(ids_of_posts);
                 });    
-                initialState = true     
+                initialState.value = true     
             }
             getData("postlikes");
             getData("postcomments");
@@ -50,7 +51,7 @@
                     arr[s[0].trim()] = s[1].trim();
                 }
                 useratributes.value = arr
-                console.log('User: ' + useratributes)
+                console.log('User: ' + useratributes.value)
             })
         }
 
@@ -70,7 +71,7 @@
                    postlikes.value = arr;                    
                 }
                 else if(pg === "postcomments") {
-                    postcomments = arr; 
+                    postcomments.value = arr; 
                 }
                 
             })
@@ -107,8 +108,9 @@
 
         //const countPostClick = ref(0)
         return {
+            posts,
             postlikes,
-            postComments,
+            postcomments,
             useratributes,
             commenttxt,
             initialState
