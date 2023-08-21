@@ -2,7 +2,7 @@
 {% block title %}Home{% endblock %}
 {% block content %}
 <div id="app" style="width: 80%; padding: 20px;">
-  [[ message ]]
+  
 </div>
 <script>
     const { createApp, ref } = Vue
@@ -10,9 +10,18 @@
     createApp({
       delimiters: ['[[',']]'],  
       setup() {
-        const message = ref('Hello vue!')
+        const postlikes = ref([]);
+        const postComments = ref([]);
+        const useratributes = ref([]);
+        const commenttxt = ref('');
+        const initialState = ref(false)
+        //const countPostClick = ref(0)
         return {
-          message
+            postlikes,
+            postComments,
+            useratributes,
+            commenttxt,
+            initialState
         }
       }
     }).mount('#app')
