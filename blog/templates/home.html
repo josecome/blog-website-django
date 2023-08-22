@@ -7,13 +7,13 @@
             <tbody>
                 <tr>
                     <td>
-                        <a href="'posts/' + search(p.fields.user, useratributes)" class="userstylepic">
+                        <a :href="'posts/' + getUserName(p.fields.user)" class="userstylepic">
                             <strong style="color: white;">
-                                [[ getUserName(p.fields.user) ]]
+                                [[ getUserNameFirstChar(p.fields.user) ]]
                             </strong>
                         </a>
 
-                        <a href="'content/' + p.fields.link" class="classUserProfile">
+                        <a :href="'posts/' + getUserName(p.fields.user)" class="classUserProfile">
                             [[ p.fields.title ]]
                         </a> <br />
                         <span class="timeOfPost">0 days</span>
@@ -178,9 +178,13 @@
                     rs_response = error;
                 });
         }
-        const getUserName = (v) => {
+        const getUserNameFirstChar = (v) => {
             var user_name = posts_user.value.filter((i) => i.pk === v)
             return user_name[0].fields.username.split('')[0];
+        }
+        const getUserName = (v) => {
+            var user_name = posts_user.value.filter((i) => i.pk === v)
+            return user_name[0].fields.username;
         }
         //const countPostClick = ref(0)
         return {
@@ -192,6 +196,7 @@
             posts_user,
             initialState,
             search,
+            getUserNameFirstChar,
             getUserName
         }
       }
