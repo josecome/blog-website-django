@@ -1,42 +1,134 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock %}
 {% block content %}
-<div style="width: 80%; padding: 20px;">
-{% for content in contents %}     
-<div style="width: 80%; padding: 20px;"> 
+<div id="app" style="width: 80%; padding: 20px;">
+    <div v-for="p in posts" class="div_content_style" style="background-color: white; margin: 16px; padding: 40px; border-radius: 26px;">
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <a :href="'posts/' + getUserName(p.fields.user)" class="userstylepic">
+                            <strong style="color: white;">
+                                [[ getUserNameFirstChar(p.fields.user) ]]
+                            </strong>
+                        </a>
 
+                        <a :href="'posts/' + getUserName(p.fields.user)" class="classUserProfile">
+                            [[ p.fields.title ]]
+                        </a> <br />
+                        <span class="timeOfPost">0 days</span>
+                    </td>    
+                </tr>
+                <tr>
+                    <td>
+                        [[ p.fields.post_content.slice(0, 200) + "..." ]] <br />
+                        <span class="likesclass">
+                            <i class="bi bi-hand-thumbs-up"></i>
+                        </span> [[ search(p.pk, postlikes) ]]
+                        <span class="commentMargin">
+                            <i class="bi bi-chat-left"></i>
+                        </span> [[ search(p.pk, postcomments) ]]                 
+                    </td>                                   
+                </tr> 
+                <tr>
+                    <td><hr class="lineclass" /></td>
+                </tr>      
+                <tr>
+                    <td>
+                        <i class="bi bi-hand-thumbs-up" onClick="() => sendData('like', p.pk)"></i> Like   
+                        <i class="bi bi-chat-left" class="optionsclass"></i> comment    
+                        <i class="bi bi-share" class="optionsclass"></i> share
+                    </td>
+                </tr>  
+                <tr>
+                    <td><hr class=" lineclass " /></td>
+                </tr>   
+                <tr>
+                    <td>
+                        <label class="userclassPic2 " class="centerText"><span>[[ p.fields.topic ]]</span></label>
+                        <div class="divcommentclass, container " >
+                            <input type="text"                                                 
+                                class="commentclass, content " 
+                                onChange="(e) => { setPostCommenttxt(e.target.value)}"
+                                placeholder="Write a comment..." />
+                                <span class="commenticons, sidecontent ">
+                                    <i class="bi bi-emoji-smile" class="optionsclass "></i>
+                                    <i class="bi bi-image" class="optionsclass "></i>
+                                    <i class="bi bi-hand-thumbs-up" class="optionsclass "></i>
+                                    <i class="bi bi-hand-thumbs-down" class="optionsclass "></i>
+                                    <i class="bi bi-heart" class="optionsclass "></i>
+                                    <i class="bi bi-handbag" class="optionsclass "></i>
+                                </span>
+                        </div>  
+                        <i class="bi bi-send" class="btnSendComment " title="Post Comment" 
+                        onClick="() => sendData('comment', p.pk)">
+                            <span class="removeclass ">Post</span>
+                        </i>  
+                    </td>    
+                </tr>    
+            </tbody>    
+        </table>    
+        <br /><br />                   
+    </div>
 </div>
-{% endfor %}
-<div id="root"></div>
-<script type="text/babel">
-    
-    function App() {
-        const { useState, useEffect } = React;
+<script>
+    const { createApp, ref, onMounted } = Vue
+  
+    createApp({
+      delimiters: ['[[',']]'],  
+      setup() {
+        const posts = ref([])
+        const postlikes = ref([]);
+        const postcomments = ref([]);
+        const useratributes = ref([]);
+        const commenttxt = ref('');
+        const posts_user = ref([])
+        const initialState = ref(false);
         const path = window.location.pathname.replace('/posts/', '');
-        const [pathname, setPathname] = useState('' + path);         
-        const [post, setPost] = useState([]);
-        const [postlikes, setPostLikes] = useState([]);
-        const [postComments, setPostComments] = useState([]);
-        const [commenttxt, setPostCommenttxt] = useState('');
-        const [initialState, setInitialState] = useState(false)
-        //const [countPostClick, setCountPostClick] = useState(0)
-
-        useEffect(() => {
-            if(!initialState){
-                console.log('pathname: ' + pathname)
-                axios.get(`/postscontent/${ pathname }`).then((data) => {      
-                    console.log(data.data)
-                    setPost(data?.data);
+        const pathname = ref(path)
+        
+        onMounted(() => {
+            if(!initialState.value){
+                axios.get(`/postscontent/${ pathname }`).then((data) => {
+                    var posts_data = data.data.post_data  
+                    var users_data = data.data.user_data  
+                    console.log(posts_data)   
+                    console.log(users_data)   
+                    posts.value = posts_data;
+                    posts_user.value = users_data
+                    let postids = posts_data.map(i => {return i.fields.user})
+                    let ids_of_posts = String(postids.filter(onlyUnique))
+                    loadUserAtrib(ids_of_posts);
                 });    
-                setInitialState(true)     
+                initialState.value = true     
             }
-            getData('/postlikes/');
-            getData('/postcomments/');
-        }, []);
-
-        function search(k, arr) {
+            getData("postlikes");
+            getData("postcomments");
+        })
+        const search = (k, arr) => {
+            console.log('======')
+            console.log(k)
+            console.log(arr)
             return arr[k] || 0
         };
+        function onlyUnique(value, index, array) {
+            return array.indexOf(value) === index;
+        };
+        async function loadUserAtrib(ids_of_posts) {
+            await axios.get('/useratrib/', { params: { ids: ids_of_posts } }).then((data) => {
+               var arr = {};
+               let v = data.data.split(';')
+               for (var i = 0; i < v.length; i++) {
+                    var s = v[i].split(':');
+                    if(s[0] === null || s[0] === '' || s[0] === 'null' || typeof s[0] === 'undefined') {
+                        break;
+                    }
+                    arr[s[0].trim()] = s[1].trim();
+                }
+                useratributes.value = arr
+                console.log('User: ' + useratributes.value)
+            })
+        }
 
         async function getData(pg) {
            //setCountPostClick(countPostClick + 1)
@@ -51,10 +143,10 @@
                     arr[s[0].trim()] = s[1].trim();
                 }
                 if(pg === "postlikes") {
-                   setPostLikes(arr);                    
+                   postlikes.value = arr;                    
                 }
                 else if(pg === "postcomments") {
-                    setPostComments(arr); 
+                    postcomments.value = arr; 
                 }
                 
             })
@@ -88,177 +180,29 @@
                     rs_response = error;
                 });
         }
-        const userStylePic = {
-            backgroundColor: "#AED6F1",
-            width: "50px",
-            height: "50px",
-            float: "left",
-            textAlign: "center",
-            borderRadius: "50%",
-            fontSize: "32px",
-            paddingLeft: "10px",
-        };
-        const userStylePic2 = {
-            backgroundColor: "#AED6F1",
-            width: "20px",
-            height: "20px",
-            float: "left",
-            borderRadius: "50%",
-            fontSize: "12px",            
-            paddingLeft: "10px",
-            display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        };
-        const divstyle = {
-            height: "120px"
-        };
-        const divcontstyle = {
-            height: "100px",
-            marginRight: "10%"
-        };
-        const styleUserProfile = {
-            textAlign: "left",
-        };
-        const optionsStyle = {
-            paddingLeft: "10px",
-        };
-        const lineStyle = {
-            width: "100%",
-            color: "gray"
+        const getUserNameFirstChar = (v) => {
+            var user_name = posts_user.value.filter((i) => i.pk === v)
+            return user_name[0].fields.username.split('')[0];
         }
-        const divcommentStyle = {
-            width: "80%",  
-            border: "1px solid gray",
-            borderRadius: "6px",
-            textAlign: "left",
-            fontSize: "12px",
-            fontWeight: "500",
-            lineHeight: "20px",
-            listStyle: "none",
-            padding: "2px 4px",
-            display: "inline-block"
-        };
-        const commentStyle = {
-          border: "0px",          
-        };
-        const commenticons = {
-          textAlign: "right",
-          float: "right",
-        };
-        const centerText = {
-            textAlign: "center",            
+        const getUserName = (v) => {
+            var user_name = posts_user.value.filter((i) => i.pk === v)
+            return user_name[0].fields.username;
         }
-        const timeOfPost = {
-            fontSize: "10px"
-        };
-        const likesStyle = {
-            backgroundColor: "#3498DB",
-            borderRadius: "50%",
-            color: "white",
-            textAlign: "center"
-        };
-        const div_content_style = {
-            backgroundColor: "white",
-            borderRadius: "26px",  
-            margin: "10px",          
-        };
-        const table_of_content_style = {
-            margin: "16px",
-        };
-        const commentMargin = {
-            marginLeft: "16px",
-        };
-        const btnSendComment = {
-            marginLeft: "16px",
-            color: "#3498DB",
-        };
-        const container = {
-            border: "1px solid grey",
-            display: "flex",
-        };
-        const content = {
-            flexGrow: "1",
-            margin: "5px",
-        };
-        const sidecontent = {
-            margin: "5px 5px 5px 0",
-        };
-        const removeStyle = {
-            all: "unset",
-        };
-        return (
-                <div>  
-                    <h1>Posts of User: { pathname }</h1>
-                    { post.map(p => ( 
-                        <div key={ p.pk } style={ div_content_style }>
-                            <table style={ table_of_content_style }>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <label style={ userStylePic }><span style={ centerText }>{ p.fields.topic }</span></label>
-                                            <a href={ 'content/' + p.fields.link } style={ styleUserProfile }>
-                                                { p.fields.title }
-                                            </a> <br />
-                                            <span style={ timeOfPost }>0 days</span>
-                                        </td>    
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            { p.fields.post_content.slice(0, 200) + "..." } <br />
-                                            <span style={ likesStyle }>
-                                                <i className="bi bi-hand-thumbs-up"></i>
-                                            </span> { search(p.pk, postlikes) }
-                                            <span style={ commentMargin }>
-                                                <i className="bi bi-chat-left"></i>
-                                            </span> { search(p.pk, postComments) }                    
-                                        </td>                                   
-                                    </tr> 
-                                    <tr>
-                                        <td><hr style={ lineStyle } /></td>
-                                    </tr>      
-                                    <tr>
-                                        <td>
-                                            <i className="bi bi-hand-thumbs-up" onClick={() => sendData('like', p.pk) }></i> Like   
-                                            <i className="bi bi-chat-left" style={ optionsStyle }></i> comment    
-                                            <i className="bi bi-share" style={ optionsStyle }></i> share
-                                        </td>
-                                    </tr>  
-                                    <tr>
-                                        <td><hr style={ lineStyle } /></td>
-                                    </tr>   
-                                    <tr>
-                                        <td>
-                                            <label style={ userStylePic2 } className="centerText"><span>{ p.fields.topic }</span></label>
-                                            <div style={ divcommentStyle, container } >
-                                                <input type="text"                                                 
-                                                    style={ commentStyle, content } 
-                                                    onChange={(e) => { setPostCommenttxt(e.target.value)}}
-                                                    placeholder="Write a comment..." />
-                                                    <span style={ commenticons, sidecontent }>
-                                                        <i className="bi bi-emoji-smile" style={ optionsStyle }></i>
-                                                        <i className="bi bi-image" style={ optionsStyle }></i>
-                                                        <i className="bi bi-hand-thumbs-up" style={ optionsStyle }></i>
-                                                        <i className="bi bi-hand-thumbs-down" style={ optionsStyle }></i>
-                                                        <i className="bi bi-heart" style={ optionsStyle }></i>
-                                                        <i className="bi bi-handbag" style={ optionsStyle }></i>
-                                                    </span>
-                                            </div>  
-                                            <i className="bi bi-send" style={ btnSendComment } title={ "Post Comment" } onClick={() => sendData('comment', p.pk) }>
-                                                <span style={ removeStyle }>Post</span>
-                                            </i>  
-                                        </td>    
-                                    </tr>    
-                                </tbody>    
-                            </table>    
-                            <br /><br />                   
-                        </div> 
-                    )) }                            
-                </div>
-        );  
-    }
-    const html_root = document.getElementById('root');
-    ReactDOM.createRoot(html_root).render(<App />);
-</script>
-</div>
+        //const countPostClick = ref(0)
+        return {
+            posts,
+            postlikes,
+            postcomments,
+            useratributes,
+            commenttxt,
+            posts_user,
+            initialState,
+            search,
+            getUserNameFirstChar,
+            getUserName,
+            pathname
+        }
+      }
+    }).mount('#app')
+  </script>
 {% endblock content %}
