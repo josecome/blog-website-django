@@ -2,30 +2,30 @@
 {% block title %}Home{% endblock %}
 {% block content %}
 <div id="app" style="width: 80%; padding: 20px;">
-    <div v-for="p in posts" class="div_content_style">
-        <table style="table_of_content_style">
+    <div v-for="p in posts" class="div_content_style" style="background-color: white; margin: 16px; padding: 40px; border-radius: 26px;">
+        <table>
             <tbody>
                 <tr>
                     <td>
                         <a href="'posts/' + search(p.fields.user, useratributes)" class="classUserProfile">
-                            <label class="userclassPic"><span class="centerText">[[ p.fields.topic ]]</span></label>
+                            <label class="userclassPic"><span style="font-size: 40px; color: black;">[[ getUserName(p.fields.user) ]]</span></label>
                         </a>
 
                         <a href="'content/' + p.fields.link" class="classUserProfile">
-                            { p.fields.title }
+                            [[ p.fields.title ]]
                         </a> <br />
                         <span class="timeOfPost">0 days</span>
                     </td>    
                 </tr>
                 <tr>
                     <td>
-                        { p.fields.post_content.slice(0, 200) + "..." } <br />
+                        [[ p.fields.post_content.slice(0, 200) + "..." ]] <br />
                         <span class="likesclass">
                             <i class="bi bi-hand-thumbs-up"></i>
-                        </span> { search(p.pk, postlikes) }
+                        </span> [[ search(p.pk, postlikes) ]]
                         <span class="commentMargin">
                             <i class="bi bi-chat-left"></i>
-                        </span> [[ search(p.pk, postComments) ]]                 
+                        </span> [[ search(p.pk, postcomments) ]]                 
                     </td>                                   
                 </tr> 
                 <tr>
@@ -80,14 +80,19 @@
         const postcomments = ref([]);
         const useratributes = ref([]);
         const commenttxt = ref('');
+        const posts_user = ref([])
         const initialState = ref(false);
         
         onMounted(() => {
             if(!initialState.value){
-                axios.get("postlist").then((data) => {      
-                    posts.value = data.data;
-                    console.log(posts.value)
-                    let postids = data.data.map(i => {return i.fields.user})
+                axios.get("postlist").then((data) => {
+                    var posts_data = data.data.post_data  
+                    var users_data = data.data.user_data  
+                    console.log(posts_data)   
+                    console.log(users_data)   
+                    posts.value = posts_data;
+                    posts_user.value = users_data
+                    let postids = posts_data.map(i => {return i.fields.user})
                     let ids_of_posts = String(postids.filter(onlyUnique))
                     loadUserAtrib(ids_of_posts);
                 });    
@@ -97,6 +102,9 @@
             getData("postcomments");
         })
         const search = (k, arr) => {
+            console.log('======')
+            console.log(k)
+            console.log(arr)
             return arr[k] || 0
         };
         function onlyUnique(value, index, array) {
@@ -168,7 +176,10 @@
                     rs_response = error;
                 });
         }
-
+        const getUserName = (v) => {
+            var user_name = posts_user.value.filter((i) => i.pk === v)
+            return user_name[0].fields.username.split('')[0];
+        }
         //const countPostClick = ref(0)
         return {
             posts,
@@ -176,8 +187,10 @@
             postcomments,
             useratributes,
             commenttxt,
+            posts_user,
             initialState,
-            search
+            search,
+            getUserName
         }
       }
     }).mount('#app')

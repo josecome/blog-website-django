@@ -59,8 +59,11 @@ def Blogs(request):
 
 def PostList(request):    
     Contents_list = Post.objects.all()
-    data = serializers.serialize('json', Contents_list)
-    #print('id: ' + str(Post.objects.all()[:1].get()))
+    User_list = User.objects.filter(id__in=Contents_list.values('user_id'))
+    post_data = serializers.serialize('json', Contents_list)
+    user_data = serializers.serialize('json', User_list)
+    data = "{ \"post_data\":" + post_data + ",\"user_data\":" + user_data + "}"    
+    
     return HttpResponse(data, content_type="application/json")
 
 
