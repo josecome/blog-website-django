@@ -2,7 +2,18 @@
 {% block title %}Post{% endblock %}
 {% block content %}
 <div id="app" style="width: 80%; padding: 20px;">
-Post {{ link }}
+    <div class="div_content_style" style="background-color: white; margin: 16px; padding: 40px; border-radius: 26px;">
+        <div>
+            <h3>[[ post.title ]]</h3> 
+            <p>[[ post.post_content ]]</p>
+        </div>
+        <div style="float: right; width: 260px; margin-top: 2px;">
+          <span>[[ post.date_created ]]</span> 
+          <span>[[ post.post_type ]]</span><br>
+          <i class="bi bi-hand-thumbs-up" class="optionsclass "></i> [[ countlikes ]]
+        </div>
+    </div>
+
 </div>
 <script>
     const { createApp, ref, onMounted } = Vue
@@ -13,28 +24,33 @@ Post {{ link }}
         const post = ref([])
         const postlikes = ref([]);
         const postcomments = ref([]);
-        const useratributes = ref([]);
         const commenttxt = ref('');
         const initialState = ref(false);
-        const path = window.location.pathname.replace('/posts/', '');
+        const countlikes = ref(0)
+        const path = window.location.pathname.replace('/posts/post/', '');
+
         const pathname = ref(path)
         
         onMounted(() => {
             if(!initialState.value){
                 axios.get(`/postdata/${ pathname.value }`).then((data) => {
-                    var post_data = data.data
-                    console.log("============vvvv======================")
-                    console.log(post_data)
+                    console.log(data.data.post_data[0].fields) 
+                    var post_data = data.data.post_data[0].fields
+                    var like_data = data.data.like_data
+                    var comment_data = data.data.comment_data
+
                     post.value = post_data;
-                    let postids = post_data.map(i => {return i.fields.user})
-                    let ids_of_posts = String(postids.filter(onlyUnique))
-                    loadUserAtrib(ids_of_posts);
+                    postlikes.value = like_data;
+                    postcomments.value = comment_data;
                 });    
-                initialState.value = true     
+                initialState.value = true
             }
+
         })
+
         return {
-            post
+            post,
+            countlikes
         }
       }
     }).mount('#app')
