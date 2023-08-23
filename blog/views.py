@@ -72,17 +72,32 @@ def PageOfPostByUser(request, username):
 
 
 def PostbyUser(request, username):
-    user_id = int(User.objects.get(username=username).pk)    
-    Contents_list = Post.objects.filter(user_id=user_id)
-    data = serializers.serialize('json', Contents_list)
+    user_id = int(User.objects.get(username=username).pk)
+
+    Post_list = Post.objects.filter(user_id=user_id)
+    Like_list = Like.objects.filter(post_id__in=Post_list.values('id'))
+    Comment_list = Comment.objects.filter(post_id__in=Post_list.values('id'))
+
+    post_data = serializers.serialize('json', Post_list)
+    like_data = serializers.serialize('json', Like_list)
+    comment_data = serializers.serialize('json', Comment_list)
+    data = "{ \"post_data\":" + post_data + ",\"like_data\":" + like_data + ",\"comment_data\":" + comment_data + "}"  
+
     return HttpResponse(data, content_type="application/json")
 
+def getPostPage(request, link):
+    return render(request, 'post.html', {'link': link})
 
-def getPostByLink(request, link):
-    data = Post.objects.filter(link=link)
-    json_data = serializers.serialize('json', data)
 
-    return HttpResponse(json_data, content_type="application/json")
+def getPostDataByLink(request, link):
+    Post_list = Post.objects.filter(link=link)
+    Like_list = Like.objects.filter(post_id__in=Post_list.values('id'))
+    Comment_list = Comment.objects.filter(post_id__in=Post_list.values('id'))
+    post_data = serializers.serialize('json', Post_list)
+    like_data = serializers.serialize('json', Like_list)
+    comment_data = serializers.serialize('json', Comment_list)
+    data = "{ \"post_data\":" + post_data + ",\"like_data\":" + like_data + ",\"comment_data\":" + comment_data + "}"  
+    return HttpResponse(data, content_type="application/json")
 
 
 def getUserAtrib(request):

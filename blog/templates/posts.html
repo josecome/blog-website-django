@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Home{% endblock %}
+{% block title %}Posts of User{% endblock %}
 {% block content %}
 <div id="app" style="width: 80%; padding: 20px;">
     <div v-for="p in posts" class="div_content_style" style="background-color: white; margin: 16px; padding: 40px; border-radius: 26px;">
@@ -7,13 +7,7 @@
             <tbody>
                 <tr>
                     <td>
-                        <a :href="'posts/' + getUserName(p.fields.user)" class="userstylepic">
-                            <strong style="color: white;">
-                                [[ getUserNameFirstChar(p.fields.user) ]]
-                            </strong>
-                        </a>
-
-                        <a :href="'posts/' + getUserName(p.fields.user)" class="classUserProfile">
+                        <a :href="'/posts/post/' + p.fields.link" class="classUserProfile">
                             [[ p.fields.title ]]
                         </a> <br />
                         <span class="timeOfPost">0 days</span>
@@ -89,21 +83,17 @@
         
         onMounted(() => {
             if(!initialState.value){
-                axios.get(`/postscontent/${ pathname }`).then((data) => {
-                    var posts_data = data.data.post_data  
-                    var users_data = data.data.user_data  
-                    console.log(posts_data)   
-                    console.log(users_data)   
+                axios.get(`/postscontent/${ pathname.value }`).then((data) => {
+                    var posts_data = data.data.post_data
+                    console.log("============vvvv======================")
+                    console.log(posts_data)
                     posts.value = posts_data;
-                    posts_user.value = users_data
                     let postids = posts_data.map(i => {return i.fields.user})
                     let ids_of_posts = String(postids.filter(onlyUnique))
                     loadUserAtrib(ids_of_posts);
                 });    
                 initialState.value = true     
             }
-            getData("postlikes");
-            getData("postcomments");
         })
         const search = (k, arr) => {
             console.log('======')
@@ -131,12 +121,12 @@
         }
 
         async function getData(pg) {
-           //setCountPostClick(countPostClick + 1)
-           await axios.get(pg).then((data) => {
+           /*await axios.get(pg).then((data) => {
                var arr = {};
                let v = data.data.split(';')
                for (var i = 0; i < v.length; i++) {
                     var s = v[i].split(':');
+                    if(i < 6){console.log('ssss:' + s[i])}
                     if(s[0] === null || s[0] === '' || s[0] === 'null' || typeof s[0] === 'undefined') {
                         break;
                     }
@@ -149,7 +139,7 @@
                     postcomments.value = arr; 
                 }
                 
-            })
+            })*/
         };
         async function sendData(vtype_of_like, vpost_id) {
             let rs_response = ""
@@ -180,15 +170,7 @@
                     rs_response = error;
                 });
         }
-        const getUserNameFirstChar = (v) => {
-            var user_name = posts_user.value.filter((i) => i.pk === v)
-            return user_name[0].fields.username.split('')[0];
-        }
-        const getUserName = (v) => {
-            var user_name = posts_user.value.filter((i) => i.pk === v)
-            return user_name[0].fields.username;
-        }
-        //const countPostClick = ref(0)
+
         return {
             posts,
             postlikes,
@@ -198,8 +180,6 @@
             posts_user,
             initialState,
             search,
-            getUserNameFirstChar,
-            getUserName,
             pathname
         }
       }

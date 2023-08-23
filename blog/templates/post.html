@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Post{% endblock %}
+{% block content %}
+<div id="app" style="width: 80%; padding: 20px;">
+Post {{ link }}
+</div>
+<script>
+    const { createApp, ref, onMounted } = Vue
+  
+    createApp({
+      delimiters: ['[[',']]'],  
+      setup() {
+        const post = ref([])
+        const postlikes = ref([]);
+        const postcomments = ref([]);
+        const useratributes = ref([]);
+        const commenttxt = ref('');
+        const initialState = ref(false);
+        const path = window.location.pathname.replace('/posts/', '');
+        const pathname = ref(path)
+        
+        onMounted(() => {
+            if(!initialState.value){
+                axios.get(`/postdata/${ pathname.value }`).then((data) => {
+                    var post_data = data.data
+                    console.log("============vvvv======================")
+                    console.log(post_data)
+                    post.value = post_data;
+                    let postids = post_data.map(i => {return i.fields.user})
+                    let ids_of_posts = String(postids.filter(onlyUnique))
+                    loadUserAtrib(ids_of_posts);
+                });    
+                initialState.value = true     
+            }
+        })
+        return {
+            post
+        }
+      }
+    }).mount('#app')
+  </script>
+{% endblock content %}
