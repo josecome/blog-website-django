@@ -58,11 +58,16 @@ def Blogs(request):
 
 
 def PostList(request):    
-    Contents_list = Post.objects.all()
-    User_list = User.objects.filter(id__in=Contents_list.values('user_id'))
-    post_data = serializers.serialize('json', Contents_list)
+    Post_list = Post.objects.all()
+    User_list = User.objects.filter(id__in=Post_list.values('user_id'))
+    Like_list = Like.objects.filter(post_id__in=Post_list.values('id'))
+    Comment_list = Comment.objects.filter(post_id__in=Post_list.values('id'))
+
+    post_data = serializers.serialize('json', Post_list)
+    like_data = serializers.serialize('json', Like_list)
+    comment_data = serializers.serialize('json', Comment_list)
     user_data = serializers.serialize('json', User_list)
-    data = "{ \"post_data\":" + post_data + ",\"user_data\":" + user_data + "}"    
+    data = "{ \"post_data\":" + post_data  + ",\"like_data\":" + like_data + ",\"comment_data\":" + comment_data + ",\"user_data\":" + user_data + "}"    
     
     return HttpResponse(data, content_type="application/json")
 
@@ -93,10 +98,12 @@ def getPostDataByLink(request, link):
     Post_list = Post.objects.filter(link=link)
     Like_list = Like.objects.filter(post_id__in=Post_list.values('id'))
     Comment_list = Comment.objects.filter(post_id__in=Post_list.values('id'))
+
     post_data = serializers.serialize('json', Post_list)
     like_data = serializers.serialize('json', Like_list)
     comment_data = serializers.serialize('json', Comment_list)
     data = "{ \"post_data\":" + post_data + ",\"like_data\":" + like_data + ",\"comment_data\":" + comment_data + "}"  
+    
     return HttpResponse(data, content_type="application/json")
 
 

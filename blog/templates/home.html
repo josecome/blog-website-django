@@ -24,10 +24,10 @@
                         [[ p.fields.post_content.slice(0, 200) + "..." ]] <br />
                         <span class="likesclass">
                             <i class="bi bi-hand-thumbs-up"></i>
-                        </span> [[ search(p.pk, postlikes) ]]
+                        </span> [[ search(p.pk, postlikes, 'likes') ]]
                         <span class="commentMargin">
                             <i class="bi bi-chat-left"></i>
-                        </span> [[ search(p.pk, postcomments) ]]                 
+                        </span> [[ search(p.pk, postcomments, 'comments') ]]                 
                     </td>                                   
                 </tr> 
                 <tr>
@@ -88,12 +88,18 @@
         onMounted(() => {
             if(!initialState.value){
                 axios.get("postlist").then((data) => {
-                    var posts_data = data.data.post_data  
-                    var users_data = data.data.user_data  
-                    console.log(posts_data)   
-                    console.log(users_data)   
+                    var posts_data = data.data.post_data
+                    var likes_data = data.data.like_data
+                    var comments_data = data.data.comment_data
+                    
+                    console.log("============vvvv======================")
+                    console.log(posts_data)
                     posts.value = posts_data;
+                    postlikes.value = likes_data
+                    postcomments.value = comments_data
+                    var users_data = data.data.user_data                    
                     posts_user.value = users_data
+                    
                     let postids = posts_data.map(i => {return i.fields.user})
                     let ids_of_posts = String(postids.filter(onlyUnique))
                     loadUserAtrib(ids_of_posts);
@@ -103,11 +109,16 @@
             getData("postlikes");
             getData("postcomments");
         })
-        const search = (k, arr) => {
+        const search = (k, arr, tp) => {
             console.log('======')
-            console.log(k)
-            console.log(arr)
-            return arr[k] || 0
+            var total = 0;
+            for (let i = 0; i < arr.length; i++) {
+                var arr_fields = arr[i].fields
+                arr_fields.post === k ? total += 1 : total += 0;
+                console.log(arr_fields.post)
+            }
+
+            return total || 0
         };
         function onlyUnique(value, index, array) {
             return array.indexOf(value) === index;
@@ -183,6 +194,9 @@
             return user_name[0].fields.username.split('')[0];
         }
         const getUserName = (v) => {
+            console.log('===================')
+            console.log(v)
+            console.log(posts_user.value)
             var user_name = posts_user.value.filter((i) => i.pk === v)
             return user_name[0].fields.username;
         }
