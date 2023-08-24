@@ -18,10 +18,10 @@
                         [[ p.fields.post_content.slice(0, 200) + "..." ]] <br />
                         <span class="likesclass">
                             <i class="bi bi-hand-thumbs-up"></i>
-                        </span> [[ search(p.pk, postlikes) ]]
+                        </span> [[ search(p.pk, postlikes, 'likes') ]]
                         <span class="commentMargin">
                             <i class="bi bi-chat-left"></i>
-                        </span> [[ search(p.pk, postcomments) ]]                 
+                        </span> [[ search(p.pk, postcomments, 'comments') ]]                 
                     </td>                                   
                 </tr> 
                 <tr>
@@ -85,9 +85,14 @@
             if(!initialState.value){
                 axios.get(`/postscontent/${ pathname.value }`).then((data) => {
                     var posts_data = data.data.post_data
+                    var likes_data = data.data.like_data
+                    var comments_data = data.data.comment_data
                     console.log("============vvvv======================")
                     console.log(posts_data)
                     posts.value = posts_data;
+                    postlikes.value = likes_data
+                    postcomments.value = comments_data
+
                     let postids = posts_data.map(i => {return i.fields.user})
                     let ids_of_posts = String(postids.filter(onlyUnique))
                     loadUserAtrib(ids_of_posts);
@@ -95,11 +100,16 @@
                 initialState.value = true     
             }
         })
-        const search = (k, arr) => {
+        const search = (k, arr, tp) => {
             console.log('======')
-            console.log(k)
-            console.log(arr)
-            return arr[k] || 0
+            var total = 0;
+            for (let i = 0; i < arr.length; i++) {
+                var arr_fields = arr[i].fields
+                arr_fields.post === k ? total += 1 : total += 0;
+                console.log(arr_fields.post)
+            }
+
+            return total || 0
         };
         function onlyUnique(value, index, array) {
             return array.indexOf(value) === index;
