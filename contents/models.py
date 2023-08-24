@@ -59,4 +59,4 @@ class Shares(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:  
-        db_table = "contents"       
+        db_table = "shares"       

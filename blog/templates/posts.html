@@ -21,7 +21,10 @@
                         </span> [[ search(p.pk, postlikes, 'likes') ]]
                         <span class="commentMargin">
                             <i class="bi bi-chat-left"></i>
-                        </span> [[ search(p.pk, postcomments, 'comments') ]]                 
+                        </span> [[ search(p.pk, postcomments, 'comments') ]]
+                        <span class="shareMargin">
+                            <i class="bi bi-share"></i>
+                        </span> [[ search(p.pk, postshares, 'shares') ]]               
                     </td>                                   
                 </tr> 
                 <tr>
@@ -74,6 +77,7 @@
         const posts = ref([])
         const postlikes = ref([]);
         const postcomments = ref([]);
+        const postshares = ref([]);
         const useratributes = ref([]);
         const commenttxt = ref('');
         const posts_user = ref([])
@@ -87,11 +91,13 @@
                     var posts_data = data.data.post_data
                     var likes_data = data.data.like_data
                     var comments_data = data.data.comment_data
+                    var shares_data = data.data.share_data
                     console.log("============vvvv======================")
                     console.log(posts_data)
                     posts.value = posts_data;
                     postlikes.value = likes_data
                     postcomments.value = comments_data
+                    postshares.value = shares_data 
 
                     let postids = posts_data.map(i => {return i.fields.user})
                     let ids_of_posts = String(postids.filter(onlyUnique))
@@ -185,6 +191,7 @@
             posts,
             postlikes,
             postcomments,
+            postshares,
             useratributes,
             commenttxt,
             posts_user,

@@ -27,7 +27,10 @@
                         </span> [[ search(p.pk, postlikes, 'likes') ]]
                         <span class="commentMargin">
                             <i class="bi bi-chat-left"></i>
-                        </span> [[ search(p.pk, postcomments, 'comments') ]]                 
+                        </span> [[ search(p.pk, postcomments, 'comments') ]]
+                        <span class="shareMargin">
+                            <i class="bi bi-share"></i>
+                        </span> [[ search(p.pk, postshares, 'shares') ]]                 
                     </td>                                   
                 </tr> 
                 <tr>
@@ -81,8 +84,9 @@
         const postlikes = ref([]);
         const postcomments = ref([]);
         const useratributes = ref([]);
-        const commenttxt = ref('');
-        const posts_user = ref([])
+        const postshares = ref([]);
+        const commenttxt = ref('');        
+        const posts_user = ref([]);
         const initialState = ref(false);
         
         onMounted(() => {
@@ -91,15 +95,17 @@
                     var posts_data = data.data.post_data
                     var likes_data = data.data.like_data
                     var comments_data = data.data.comment_data
-                    
+                    var shares_data = data.data.share_data
+                    var users_data = data.data.user_data
+
                     console.log("============vvvv======================")
                     console.log(posts_data)
                     posts.value = posts_data;
                     postlikes.value = likes_data
                     postcomments.value = comments_data
-                    var users_data = data.data.user_data                    
+                    postshares.value = shares_data              
                     posts_user.value = users_data
-                    
+
                     let postids = posts_data.map(i => {return i.fields.user})
                     let ids_of_posts = String(postids.filter(onlyUnique))
                     loadUserAtrib(ids_of_posts);
@@ -205,6 +211,7 @@
             posts,
             postlikes,
             postcomments,
+            postshares,
             useratributes,
             commenttxt,
             posts_user,
