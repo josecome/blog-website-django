@@ -102,11 +102,13 @@ def getPostDataByLink(request, link):
     Post_list = Post.objects.filter(link=link)
     Like_list = Like.objects.filter(post_id__in=Post_list.values('id'))
     Comment_list = Comment.objects.filter(post_id__in=Post_list.values('id'))
+    Share_list = Share.objects.filter(post_id__in=Post_list.values('id'))
 
     post_data = serializers.serialize('json', Post_list)
     like_data = serializers.serialize('json', Like_list)
     comment_data = serializers.serialize('json', Comment_list)
-    data = "{ \"post_data\":" + post_data + ",\"like_data\":" + like_data + ",\"comment_data\":" + comment_data + "}"  
+    share_data = serializers.serialize('json', Share_list)
+    data = "{ \"post_data\":" + post_data + ",\"like_data\":" + like_data + ",\"comment_data\":" + comment_data  +  ",\"share_data\":" + share_data + "}"   
     
     return HttpResponse(data, content_type="application/json")
 
