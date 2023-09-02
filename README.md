@@ -2,7 +2,7 @@
 This project aim to demostrate how Blog webpage can be developed using Python + Django
 
 In the Home page are all posts of users
-<img src="blog/static/all_posts.jpg">
+<img src="blog/static/allposts.jpg">
 
 Clicking the user icon, posts of the specific user is displayed
 <img src="blog/static/posts.jpg">
