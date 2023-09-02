@@ -47,7 +47,7 @@ def loginPage(request):
                 return redirect('/')           
             else:
                 # Return an 'invalid login' error message.
-                messages.info(request, _('Please, fill form'))
+                messages.info(request, _('Please, Invalid Username and Password!'))
             
     return render(request, 'login.html')
     
