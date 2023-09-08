@@ -32,6 +32,7 @@ urlpatterns = [
     path('posts/<str:username>', views.PageOfPostByUser, name="posts"),
     path('posts/post/<str:link>', views.getPostPage, name="post"),
     path('postdata/<str:link>', views.getPostDataByLink, name="postdata"),
+    path('api/postdata/<str:link>', views.getPostDataByLink, name="postdata"),
     path('postscontent/<str:username>', views.PostbyUser, name="postscontent"),
     path('api/postscontent/<str:username>', views.PostbyUser, name="postscontent"),
     path('postlikes/', views.PostLikes, name="postlikes"),
