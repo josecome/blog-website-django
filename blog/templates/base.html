@@ -1,125 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
-    <style>
-        a {
-            text-decoration: none !important
-        }
-        .centerText {
-            text-align: center;
-        }
-        .userstylepic {
-            background-color: #aed6f1;
-            width: 50px;
-            height: 50px;
-            float: left;
-            text-align: center;
-            border-radius: 50%;
-            font-size: 32px;
-            padding-left: 10px;
-        };
-        .divstyle {
-            height: 120px
-        };
-        .divcontstyle {
-            height: 100px;
-            margin-right: 10%
-        };
-        .styleuserprofile {
-            text-align: left;
-        };
-        .optionsstyle {
-            padding-left: 10px;
-        };
-        .linestyle {
-            width: 100%;
-            color: gray
-        }
-        .divcommentstyle {
-            width: 80%;  
-            border: 1px solid gray;
-            border-radius: 6px;
-            text-align: left;
-            font-size: 12px;
-            font-weight: 500;
-            line-height: 20px;
-            list-style: none;
-            padding: 2px 4px;
-            display: inline-block
-        };
-        .commentstyle {
-          border: 0px;          
-        };
-        .commenticons {
-          text-align: right;
-          float: right;
-        };
-        .centertext {
-            text-align: center;            
-        }
-        .timeofpost {
-            font-size: 10px
-        };
-        .likesstyle {
-            background-color: #3498db;
-            border-radius: 50%;
-            color: white;
-            text-align: center
-        };
-        .div_content_style {
-            background-color: white;
-            border-radius: 26px;  
-            margin: 10px;
-            padding: 40px;      
-        };
-        .table_of_content_style {
-            margin: 16px;
-            background-color: white;
-        };
-        .commentmargin {
-            margin-left: 16px;
-        };
-        .btnsendcomment {
-            margin-left: 16px;
-            color: #3498db;
-        };
-        .container {
-            border: 1px solid grey;
-            display: flex;
-        };
-        .content {
-            flex-grow: 1;
-            margin: 5px;
-        };
-        .sidecontent {
-            margin: 5px 5px 5px 0;
-        };
-        .removestyle {
-            all: unset;
-        };
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            {% block title %}{% endblock %}
+        </title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+              rel="stylesheet"
+              integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+              crossorigin="anonymous">
+        <link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
+        <style>
+            a {
+                text-decoration: none !important
+            }
 
-    </style>
-</head>
-<body style="background-color: #DEE0E2;">
-    {% load static %}
-    {% include 'head.html' %}
-<main style="width: 100%;">
-    {% block content %}
-    <h3>Loading...</h3>
-    {% endblock content %}
-</main>
-<footer style="width: 100%; background-color: #E5E7E9; height: 60px;">
-    <p style="text-align: center; padding-top: 20px;">Copyright &copy; 2023</p>
-</footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
-{% csrf_token %}
-</body>
+            .centerText {
+                text-align: center;
+            }
+
+            .userstylepic {
+                background-color: #aed6f1;
+                width: 50px;
+                height: 50px;
+                float: left;
+                text-align: center;
+                border-radius: 50%;
+                font-size: 32px;
+                padding-left: 10px;
+            }
+
+            ;
+
+            .divstyle {
+                height: 120px
+            }
+
+            ;
+
+            .divcontstyle {
+                height: 100px;
+                margin-right: 10%
+            }
+
+            ;
+
+            .styleuserprofile {
+                text-align: left;
+            }
+
+            ;
+
+            .optionsstyle {
+                padding-left: 10px;
+            }
+
+            ;
+
+            .linestyle {
+                width: 100%;
+                color: gray
+            }
+
+            .divcommentstyle {
+                width: 80%;
+                border: 1px solid gray;
+                border-radius: 6px;
+                text-align: left;
+                font-size: 12px;
+                font-weight: 500;
+                line-height: 20px;
+                list-style: none;
+                padding: 2px 4px;
+                display: inline-block
+            }
+
+            ;
+
+            .commentstyle {
+                border: 0px;
+            }
+
+            ;
+
+            .commenticons {
+                text-align: right;
+                float: right;
+            }
+
+            ;
+
+            .centertext {
+                text-align: center;
+            }
+
+            .timeofpost {
+                font-size: 10px
+            }
+
+            ;
+
+            .likesstyle {
+                background-color: #3498db;
+                border-radius: 50%;
+                color: white;
+                text-align: center
+            }
+
+            ;
+
+            .div_content_style {
+                background-color: white;
+                border-radius: 26px;
+                margin: 10px;
+                padding: 40px;
+            }
+
+            ;
+
+            .table_of_content_style {
+                margin: 16px;
+                background-color: white;
+            }
+
+            ;
+
+            .commentmargin {
+                margin-left: 16px;
+            }
+
+            ;
+
+            .btnsendcomment {
+                margin-left: 16px;
+                color: #3498db;
+            }
+
+            ;
+
+            .container {
+                border: 1px solid grey;
+                display: flex;
+            }
+
+            ;
+
+            .content {
+                flex-grow: 1;
+                margin: 5px;
+            }
+
+            ;
+
+            .sidecontent {
+                margin: 5px 5px 5px 0;
+            }
+
+            ;
+
+            .removestyle {
+                all: unset;
+            }
+
+            ;
+        </style>
+    </head>
+    <body style="background-color: #DEE0E2;">
+        {% load static %}
+        {% include 'head.html' %}
+        <main style="width: 100%;">
+            {% block content %}
+                <h3>Loading...</h3>
+            {% endblock content %}
+        </main>
+        <footer style="width: 100%; background-color: #E5E7E9; height: 60px;">
+            <p style="text-align: center; padding-top: 20px;">Copyright &copy; 2023</p>
+        </footer>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+                crossorigin="anonymous"></script>
+        {% csrf_token %}
+    </body>
 </html>

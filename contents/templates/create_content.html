@@ -3,35 +3,45 @@
 {% block content %}
     <style>
         @media screen and (max-width: 600px) {
-            input[type=text], select {
+
+            input[type=text],
+            select {
                 width: 100%;
             }
-        }  
+        }
+
         @media screen and (min-width: 601px) {
-            input[type=text], select {
+
+            input[type=text],
+            select {
                 width: 400px;
             }
-        }           
-        input[type=text], select {          
-          padding: 12px 20px;
-          margin: 8px 0;
-          display: inline-block;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-          box-sizing: border-box;
         }
+
+        input[type=text],
+        select {
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
         input[type=submit] {
-          width: 120px;
-          background-color: #6a71c2;
-          color: white;
-          padding: 14px 20px;
-          margin: 8px 0;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
+            width: 120px;
+            background-color: #6a71c2;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
         }
     </style>
-    <form action="/contents/create_content_add/" method="POST" style="padding-left: 20px;">
+    <form action="/contents/create_content_add/"
+          method="POST"
+          style="padding-left: 20px">
         {% csrf_token %}
         <table>
             <tr>
@@ -52,7 +62,7 @@
             <tr>
                 <td>{{ form.post_type }}</td>
             </tr>
-        </table>        
+        </table>
         <input type="submit" value="Submit">
     </form>
-    {% endblock content %}
+{% endblock content %}
