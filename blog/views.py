@@ -29,12 +29,13 @@ from django.http import JsonResponse
 from datetime import datetime
 import json
 from .utils import (
+    send_email,
     send_activation_email, 
     send_reset_password_email, 
     send_forgotten_username_email, 
     send_activation_change_email,
 )
-
+from .decorators import editor_required, user_is_post_author
 
 def loginPage(request):
     if request.user.is_authenticated:
@@ -206,13 +207,24 @@ def registrationPage(request):
             form.save()
             user = form.cleaned_data.get('username')
             messages.sucess(request, 'Account was sucessfully created for ' + user)      
-            app_notifications.send_email(request)
+            send_email(request)
             
             return redirect('login.html')
                                 
     context = {'form': form}
     return render(request, 'register.html', context)
-   
+
+
+@editor_required
+def add_super_content():
+    # This content is set by Editors
+    pass
+
+@user_is_post_author
+def edit_post(request, user_id):
+    # Only the author can edit the post
+    pass
+
    
 def logout_view(request):
     logout(request)
