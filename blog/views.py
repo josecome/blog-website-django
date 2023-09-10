@@ -18,7 +18,6 @@ from django.utils.translation import gettext_lazy as _
 #from django.contrib.auth.forms import UserCreationForm
 from .forms import CreateUserForm
 from django import forms
-from .utilities import app_notifications
 from django.contrib.auth.models import User
 from contents.models import Posts as Post, Likes as Like, Comments as Comment, Shares as Share
 from django.db import connections
@@ -29,6 +28,12 @@ from django.db.models import Count
 from django.http import JsonResponse
 from datetime import datetime
 import json
+from .utils import (
+    send_activation_email, 
+    send_reset_password_email, 
+    send_forgotten_username_email, 
+    send_activation_change_email,
+)
 
 
 def loginPage(request):
