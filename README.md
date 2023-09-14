@@ -12,7 +12,11 @@ Clicking the title of post, the post is displayed
 
 ## To run the project
 
-Type in commandline
+Type and run in commandline the follow command to install required packages
+
+### `pip install -r requirements.txt`
+
+Type and run in commandline
 
 ### `py manage.py migrate`
 
