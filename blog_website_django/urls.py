@@ -28,21 +28,16 @@ from rest_framework.routers import DefaultRouter
 urlpatterns = [
     path('', views.Blogs, name="home"),    
     path('postlist/', views.PostList, name="postlist"),  
-    path('api/postlist/', views.PostList, name="apipostlist"),  
+    
     path('posts/<str:username>', views.PageOfPostByUser, name="posts"),
     path('posts/post/<str:link>', views.getPostPage, name="post"),
     path('postdata/<str:link>', views.getPostDataByLink, name="postdata"),
-    path('api/postdata/<str:link>', views.getPostDataByLink, name="postdata"),
-    path('postscontent/<str:username>', views.PostbyUser, name="postscontent"),
-    path('api/postscontent/<str:username>', views.PostbyUser, name="postscontent"),
+    path('postscontent/<str:username>', views.PostbyUser, name="postscontent"),    
     path('postlikes/', views.PostLikes, name="postlikes"),
     path('postcomments/', views.PostComments, name="postcomments"),
-    path('api/postlikes/', views.PostLikes, name="apipostlikes"),    
-    path('api/postcomments/', views.PostComments, name="apipostcomments"),
     path('addremovelike/', views.addRemoveLike, name="addremovelike"),
     path('addcomment/', views.addComment, name="addcomment"),
-    path('useratrib/', views.getUserAtrib, name="useratrib"),
-    path('api/useratrib/', views.getUserAtrib, name="apiuseratrib"),    
+    path('useratrib/', views.getUserAtrib, name="useratrib"),     
     path('login/', views.loginPage, name='login'),
     path('admin/', admin.site.urls),
     path('logout/', views.logout_view, name='logout'),
@@ -57,5 +52,12 @@ urlpatterns = [
 ]
 
 router = DefaultRouter()
-router.register(r'api/user', api_views.UserViewData, basename="user")
+router.register(r'api/user', api_views.UserViewData, basename="user"),
+router.register('api/postdata/<str:link>', api_views.getPostDataByLink, basename="postdata"),
+router.register('api/postscontent/<str:username>', api_views.PostbyUser, basename="postscontent"),
+router.register('api/postlikes/', api_views.PostLikes, basename="apipostlikes"),    
+router.register('api/postcomments/', api_views.PostComments, basename="apipostcomments"),
+router.register('api/postlist/', api_views.PostList, basename="apipostlist"),  
+router.register('api/useratrib/', api_views.getUserAtrib, basename="apiuseratrib"),   
+
 urlpatterns += router.urls
