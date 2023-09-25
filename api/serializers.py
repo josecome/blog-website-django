@@ -51,9 +51,9 @@ class PostListSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class getUserAtribSerializer(serializers.ModelSerializer):
+class ShareSerializer(serializers.ModelSerializer):
     
     class Meta:
-        model = get_user_model()
+        model = Share
         fields = "__all__"
 
