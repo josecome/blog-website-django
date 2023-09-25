@@ -2,7 +2,15 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # Create your models here.
-class Posts(models.Model):
+class SharedFields(models.Model):
+    date_created = models.DateField()
+    date_updated = models.DateField(null=True)
+
+    class Meta:
+        abstract = True
+
+
+class Posts(SharedFields):
     LIST_OF_TYPE_POST = (
         ('Private', 'Private'),
         ('Public', 'Public')
@@ -10,9 +18,7 @@ class Posts(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=120)
     post_content = models.TextField()   
-    post_type = models.CharField(max_length=40, choices=LIST_OF_TYPE_POST)      
-    date_created = models.DateField()
-    date_updated = models.DateField(null=True)
+    post_type = models.CharField(max_length=40, choices=LIST_OF_TYPE_POST) 
     link = models.CharField(max_length=100)  
     user = models.ForeignKey(User, on_delete=models.CASCADE)   
 
@@ -24,12 +30,10 @@ class Posts(models.Model):
         db_table = "post"        
 
 
-class Likes(models.Model):
+class Likes(SharedFields):
     id = models.AutoField(primary_key=True)
     type_of_like = models.CharField(max_length=120)
-    post_liked_link = models.CharField(max_length=80)   
-    date_created = models.DateField()
-    date_updated = models.DateField(null=True)
+    post_liked_link = models.CharField(max_length=80)
     post = models.ForeignKey(Posts, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -37,12 +41,10 @@ class Likes(models.Model):
         db_table = "likes"        
 
 
-class Comments(models.Model):
+class Comments(SharedFields):
     id = models.AutoField(primary_key=True)
     comment = models.TextField(default='Without comment')   
-    post_commented_link = models.CharField(max_length=80)   
-    date_created = models.DateField()
-    date_updated = models.DateField(null=True)
+    post_commented_link = models.CharField(max_length=80)
     post = models.ForeignKey(Posts, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE) 
 
@@ -50,11 +52,9 @@ class Comments(models.Model):
         db_table = "comments"     
 
 
-class Shares(models.Model):
+class Shares(SharedFields):
     id = models.AutoField(primary_key=True)
-    post_shared_link = models.CharField(max_length=80)   
-    date_created = models.DateField()
-    date_updated = models.DateField(null=True)
+    post_shared_link = models.CharField(max_length=80)
     post = models.ForeignKey(Posts, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
