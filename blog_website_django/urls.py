@@ -53,10 +53,16 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
     # API (Getting Data)
+    path('api/user_posts_list/', api_views.getMultiplePostData.as_view()),
+    path('api/user_posts/<int:user>', api_views.getPostDataByUser.as_view()),
+    path('api/posts/likes/', api_views.getMultipleLikesData.as_view()),
+    path('api/posts/comments/', api_views.getMultipleCommentsData.as_view()),
+    path('api/posts/shares/', api_views.getMultipleSharesData.as_view()),
+
     re_path(r'api/post/(?P<pk>[a-z0-9]+)$', api_views.getPostDataByLink.as_view()),
-    path('api/post/<int:pk>/likes', api_views.getLikesData.as_view()),
-    path('api/post/<int:pk>/comments', api_views.getCommentsData.as_view()),
-    path('api/post/<int:pk>/shares', api_views.getSharesData.as_view()),
+    path('api/post/<int:pk>/likes/', api_views.getLikesData.as_view()),
+    path('api/post/<int:pk>/comments/', api_views.getCommentsData.as_view()),
+    path('api/post/<int:pk>/shares/', api_views.getSharesData.as_view()),
 ]
 
 router = DefaultRouter()

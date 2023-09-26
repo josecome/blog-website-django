@@ -29,21 +29,18 @@ class PostIdSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class LikesSerializer(serializers.ModelSerializer):
-    post = PostIdSerializer()
     class Meta:
         model = Like
-        fields = ["type_of_like", "post_liked_link", "user", "post"]
+        fields = ["type_of_like", "post_liked_link", "user"]
 
 
 class CommentsSerializer(serializers.HyperlinkedModelSerializer):
-    post = PostIdSerializer()
     class Meta:
         model = Comment
-        fields = ["comment", "post_commented_link", "user", "post"]
+        fields = ["comment", "post_commented_link", "user"]
 
 
 class SharesSerializer(serializers.HyperlinkedModelSerializer):
-    post = PostIdSerializer()
     class Meta:
         model = Share
-        fields = ["post_shared_link", "user", "post"]
+        fields = ["post_shared_link", "user"]

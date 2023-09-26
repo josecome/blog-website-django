@@ -30,6 +30,55 @@ class UserViewData(viewsets.ModelViewSet):
     # permission_classes = [permissions.IsAuthenticated]
 
 
+# Multiple Posts of specific user
+class getPostDataByUser(generics.ListAPIView):
+    serializer_class = PostSerializer
+    lookup_url_kwarg = "user"
+
+    def get_queryset(self):
+        user = self.kwargs.get(self.lookup_url_kwarg)
+        post = Post.objects.filter(user=user)
+        return post
+
+
+# Multiple Posts
+class getMultiplePostData(generics.ListAPIView):
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        post = Post.objects.all()[:20]
+        return post
+
+
+# Post Atributes for Multiple Posts
+class getMultipleLikesData(generics.ListAPIView):
+    serializer_class = LikesSerializer
+
+    def get_queryset(self):
+        p = self.request.query_params.getlist('t', '')
+        likes = Like.objects.filter(post__in=list(p))
+        return likes
+
+
+class getMultipleCommentsData(generics.ListAPIView):
+    serializer_class = LikesSerializer
+
+    def get_queryset(self):
+        p = self.request.query_params.getlist('t', '')
+        comments = Like.objects.filter(post__in=list(p))
+        return comments
+
+
+class getMultipleSharesData(generics.ListAPIView):
+    serializer_class = LikesSerializer
+
+    def get_queryset(self):
+        p = self.request.query_params.getlist('t', '')
+        shares = Like.objects.filter(post__in=list(p))
+        return shares
+
+
+# Data for Specific Post
 class getPostDataByLink(generics.ListAPIView):
     serializer_class = PostSerializer
     lookup_url_kwarg = "pk"
