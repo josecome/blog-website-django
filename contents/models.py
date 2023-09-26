@@ -20,7 +20,7 @@ class Posts(SharedFields):
     post_content = models.TextField()   
     post_type = models.CharField(max_length=40, choices=LIST_OF_TYPE_POST) 
     link = models.CharField(max_length=100)  
-    user = models.ForeignKey(User, on_delete=models.CASCADE)   
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     @property
     def username(self):
@@ -46,7 +46,7 @@ class Comments(SharedFields):
     comment = models.TextField(default='Without comment')   
     post_commented_link = models.CharField(max_length=80)
     post = models.ForeignKey(Posts, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE) 
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:  
         db_table = "comments"     

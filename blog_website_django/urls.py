@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 from blog import views
 from django.conf.urls import include
 from django.contrib.auth import views as auth_views
@@ -46,18 +46,20 @@ urlpatterns = [
     path('content/<str:lnk>', views.Content, name="content"),
     path('change-password/', auth_views.PasswordChangeView.as_view()),
     path('contents/', include('contents.urls')),
+
+    # API auth
     path('api/auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+    # API (Getting Data)
+    re_path(r'api/post/(?P<pk>[a-z0-9]+)$', api_views.getPostDataByLink.as_view()),
+    path('api/post/<int:pk>/likes', api_views.getLikesData.as_view()),
+    path('api/post/<int:pk>/comments', api_views.getCommentsData.as_view()),
+    path('api/post/<int:pk>/shares', api_views.getSharesData.as_view()),
 ]
 
 router = DefaultRouter()
 router.register(r'api/user', api_views.UserViewData, basename="user"),
-router.register('api/postdata/<str:link>', api_views.getPostDataByLink, basename="postdata"),
-router.register('api/postscontent/<str:username>', api_views.PostbyUser, basename="postscontent"),
-router.register('api/postlikes/', api_views.PostLikes, basename="apipostlikes"),    
-router.register('api/postcomments/', api_views.PostComments, basename="apipostcomments"),
-router.register('api/postlist/', api_views.PostList, basename="apipostlist"),  
-router.register('api/useratrib/', api_views.getUserAtrib, basename="apiuseratrib"),   
 
 urlpatterns += router.urls

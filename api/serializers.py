@@ -9,51 +9,41 @@ from contents.models import (
 )
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = get_user_model()
         fields = "__all__"
 
 
-class getPostDataByLinkSerializer(serializers.ModelSerializer):
-    
+class PostSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Post
-        fields = "__all__"
+        fields = ["id", "title", "post_content", "post_type", "link", "user"]
 
 
-class PostbyUserSerializer(serializers.ModelSerializer):
-    
+class PostIdSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Post
-        fields = "__all__"
+        fields = ["id"]
 
 
-class PostLikesSerializer(serializers.ModelSerializer):
-    
+class LikesSerializer(serializers.ModelSerializer):
+    post = PostIdSerializer()
     class Meta:
         model = Like
-        fields = "__all__"
+        fields = ["type_of_like", "post_liked_link", "user", "post"]
 
 
-class PostCommentsSerializer(serializers.ModelSerializer):
-    
+class CommentsSerializer(serializers.HyperlinkedModelSerializer):
+    post = PostIdSerializer()
     class Meta:
         model = Comment
-        fields = "__all__"
+        fields = ["comment", "post_commented_link", "user", "post"]
 
 
-class PostListSerializer(serializers.ModelSerializer):
-    
-    class Meta:
-        model = Post
-        fields = "__all__"
-
-
-class ShareSerializer(serializers.ModelSerializer):
-    
+class SharesSerializer(serializers.HyperlinkedModelSerializer):
+    post = PostIdSerializer()
     class Meta:
         model = Share
-        fields = "__all__"
-
+        fields = ["post_shared_link", "user", "post"]
