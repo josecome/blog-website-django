@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Post{% endblock %}
 {% block content %}
-    <div id="app" style="width: 80%; padding: 20px;">
         <div class="div_content_style"
              style="background-color: white;
                     margin: 16px;
@@ -10,8 +9,8 @@
                     width: 90%;
                     overflow: hidden">
             <div style="float: left; width: 560px;">
-                <h3>[[ post.title ]]</h3>
-                <p>[[ post.post_content ]]</p>
+                <h3>{{ post.title }}</h3>
+                <p>{{ post.post_content }}</p>
             </div>
             <div style="width: 460px;
                         margin-top: 2px;
@@ -21,98 +20,42 @@
                     <strong style="color: white;">F</strong>
                 </span>
                 <br />
-                <span style="padding: 10px;">[[ post.date_created ]]</span>
-                <span style="margin-left: 12px; padding: 10px;">[[ post.post_type ]]</span>
+                <span style="padding: 10px;">{{ post.date_created }}</span>
+                <span style="margin-left: 12px; padding: 10px; background-color: #A9F764; color: blue; border: 4px solid blue; border-radius: 20px;">{{ post.post_type  }}</span>
                 <br>
                 <br />
-                <span class="likesclass" style="padding: 10px;">
-                    <i class="bi bi-hand-thumbs-up"></i>
-                </span> [[ search(postid, postlikes, 'likes') ]]
-                <span class="commentMargin" style="padding: 10px;">
-                    <i class="bi bi-chat-left"></i>
-                </span> [[ search(postid, postcomments, 'comments') ]]
-                <span class="shareMargin" style="padding: 10px;">
-                    <i class="bi bi-share"></i>
-                </span> [[ search(postid, postshares, 'shares') ]]
+                {% for like in likes %}
+                <i class="bi bi-hand-thumbs-up" style="padding-right: 10px">
+                    {{ like.count_likes }}
+                  </i>
+                  <i class="bi bi bi-heart" style="padding-right: 10px">
+                    {{ like.count_loves }}
+                  </i>
+                  <i class="bi bi-hand-thumbs-down" style="padding-right: 10px">
+                    {{ like.count_sads }}
+                  </i>
+                  <i class="bi bi-chat-left" style="padding-right: 10px">
+                    {{ like.count_comments }}
+                  </i>
+                  <i class="bi bi-share">
+                    {{ like.count_shares }}
+                  </i>
+                  {% endfor %}
                 <br />
                 <hr style="width: 92%;" />
                 <strong>Comments</strong>
                 <br />
                 <hr style="width: 92%;" />
-                <div v-for="c in postcomments"
+                {% for comment in comments %}
+                <div
                      style="width: 100%;
                             padding: 10px;
                             margin: 10px">
-                    [[ c.fields.comment ]]
+                    {{ comment.comment }}
                     <br />
                     <hr style="width: 92%;" />
                 </div>
+                {% endfor %}
             </div>
         </div>
-    </div>
-    <script>
-        const {
-            createApp,
-            ref,
-            onMounted
-        } = Vue
-
-        createApp({
-            delimiters: ['[[', ']]'],
-            setup() {
-                const post = ref([])
-                const postlikes = ref([]);
-                const postcomments = ref([]);
-                const postshares = ref([]);
-                const commenttxt = ref('');
-                const postid = ref('');
-                const initialState = ref(false);
-                const countlikes = ref(0)
-                const path = window.location.pathname.replace('/posts/post/', '');
-
-                const pathname = ref(path)
-
-                onMounted(() => {
-                    if (!initialState.value) {
-                        axios.get(`/postdata/${ pathname.value }`).then((data) => {
-                            console.log(data.data)
-                            var post_data = data.data.post_data[0].fields
-                            var postid_data = data.data.post_data[0].pk;
-                            var like_data = data.data.like_data
-                            var comment_data = data.data.comment_data
-                            var shares_data = data.data.share_data
-
-                            post.value = post_data;
-                            postid.value = postid_data;
-                            postlikes.value = like_data;
-                            postcomments.value = comment_data;
-                            postshares.value = shares_data;
-                        });
-                        initialState.value = true
-                    }
-
-                })
-                const search = (k, arr, tp) => {
-                    console.log('======')
-                    console.log(k)
-                    var total = 0;
-                    for (let i = 0; i < arr.length; i++) {
-                        var arr_fields = arr[i].fields
-                        arr_fields.post === k ? total += 1 : total += 0;
-                    }
-
-                    return total || 0
-                };
-
-                return {
-                    post,
-                    postid,
-                    postlikes,
-                    postcomments,
-                    postshares,
-                    search
-                }
-            }
-        }).mount('#app')
-    </script>
 {% endblock content %}

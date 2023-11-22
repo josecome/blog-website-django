@@ -29,11 +29,10 @@ from django.db import connections
 from django.http import HttpResponse
 from django.core import serializers
 from django.db import connection
-from django.db.models import Count
+from django.db.models import Q, Count
 from django.http import JsonResponse
 from datetime import datetime
 import json
-from django.db.models import Q
 from .utils import (
     send_email,
     send_activation_email, 
@@ -82,7 +81,7 @@ def Blogs(request):
 
 def PageOfPostByUser(request, username):
     context = {}
-    Post_list = Post.objects.filter(user__username=username).select_related('user').order_by('id').select_related('user').annotate(
+    Post_list = Post.objects.filter(user__username=username).select_related('user').order_by('id').annotate(
         count_likes=Count("tags", filter=Q(tags__tag='like')),
         count_loves=Count("tags", filter=Q(tags__tag='love')),
         count_sads=Count("tags", filter=Q(tags__tag='sad')),
@@ -97,16 +96,20 @@ def PageOfPostByUser(request, username):
 
 def getPostPage(request, link):
     context = {}
-    Post_list = Post.objects.filter(link=link).select_related('user').order_by('id').select_related('user').annotate(
+    PostByLink = Post.objects.get(link=link)
+    likes = Post.objects.filter(link=link).annotate(
         count_likes=Count("tags", filter=Q(tags__tag='like')),
         count_loves=Count("tags", filter=Q(tags__tag='love')),
         count_sads=Count("tags", filter=Q(tags__tag='sad')),
         count_comments=Count("comments"),
         count_shares=Count("shares"),
         )
-    context['posts'] = Post_list
-    context['user_posts'] = f'{Post_list[0].user.first_name} {Post_list[0].user.last_name}'
+    comments = Comment.objects.filter(post__link=link)
+    context['post'] = PostByLink
+    context['user_posts'] = f'{PostByLink.user.first_name} {PostByLink.user.last_name}'
     context['link'] = link
+    context['likes'] = likes
+    context['comments'] = comments
     
     return render(request, 'post.html', context)
 
