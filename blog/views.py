@@ -104,7 +104,11 @@ def getPostPage(request, link):
         count_comments=Count("comments"),
         count_shares=Count("shares"),
         )
-    comments = Comment.objects.filter(post__link=link)
+    comments = Comment.objects.filter(post__link=link).annotate(
+        count_likes=Count("tags", filter=Q(tags__tag='like')),
+        count_loves=Count("tags", filter=Q(tags__tag='love')),
+        count_sads=Count("tags", filter=Q(tags__tag='sad'))
+        )
     context['post'] = PostByLink
     context['user_posts'] = f'{PostByLink.user.first_name} {PostByLink.user.last_name}'
     context['link'] = link
