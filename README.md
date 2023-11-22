@@ -8,7 +8,7 @@ Clicking the user icon, posts of the specific user is displayed
 <img src="blog/static/posts2.jpg">
 
 Clicking the title of post, the post is displayed
-<img src="blog/static/post.jpg">
+<img src="blog/static/post2.jpg">
 
 ## To run the project
 
