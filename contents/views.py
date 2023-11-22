@@ -3,7 +3,12 @@ from .forms import ContentForm
 from django.template import RequestContext
 from django.http import HttpResponse
 from django.contrib import messages
-from .models import Posts as Post
+from .models import (
+    Post,
+    Comment,
+    Like,
+    Share,
+)
 from django.utils.translation import gettext_lazy as _
 import datetime
 

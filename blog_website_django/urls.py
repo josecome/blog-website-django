@@ -26,9 +26,7 @@ from rest_framework_simplejwt.views import (
 from rest_framework.routers import DefaultRouter
 
 urlpatterns = [
-    path('', views.Blogs, name="home"),    
-    path('postlist/', views.PostList, name="postlist"),  
-    
+    path('', views.Blogs, name="home"),
     path('posts/<str:username>', views.PageOfPostByUser, name="posts"),
     path('posts/post/<str:link>', views.getPostPage, name="post"),
     path('postdata/<str:link>', views.getPostDataByLink, name="postdata"),

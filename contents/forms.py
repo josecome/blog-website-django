@@ -1,5 +1,7 @@
 from django import forms  
-from .models import Posts as Post
+from .models import (
+    Post,
+)
 
 
 class ContentForm(forms.ModelForm):  

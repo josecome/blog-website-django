@@ -7,10 +7,10 @@ from django.db.models import Count
 # Create your views here.
 from django.contrib.auth import get_user_model
 from contents.models import (
-    Posts as Post, 
-    Likes as Like, 
-    Comments as Comment, 
-    Shares as Share
+    Post,
+    Comment,
+    Like,
+    Share,
 )
 # from rest_framework import permissions
 

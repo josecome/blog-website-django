@@ -19,7 +19,12 @@ from django.utils.translation import gettext_lazy as _
 from .forms import CreateUserForm
 from django import forms
 from django.contrib.auth.models import User
-from contents.models import Posts as Post, Likes as Like, Comments as Comment, Shares as Share
+from contents.models import (
+    Post,
+    Comment,
+    Like,
+    Share,
+)
 from django.db import connections
 from django.http import HttpResponse
 from django.core import serializers
@@ -28,6 +33,7 @@ from django.db.models import Count
 from django.http import JsonResponse
 from datetime import datetime
 import json
+from django.db.models import Q
 from .utils import (
     send_email,
     send_activation_email, 
@@ -60,25 +66,17 @@ def loginPage(request):
     
 
 # @login_required(login_url='login.html')    
-def Blogs(request):    
-    return render(request, 'home.html')  
-
-
-def PostList(request):    
-    Post_list = Post.objects.all()
-    User_list = User.objects.filter(id__in=Post_list.values('user_id'))
-    Like_list = Like.objects.filter(post_id__in=Post_list.values('id'))
-    Comment_list = Comment.objects.filter(post_id__in=Post_list.values('id'))
-    Share_list = Share.objects.filter(post_id__in=Post_list.values('id'))
-
-    post_data = serializers.serialize('json', Post_list)
-    like_data = serializers.serialize('json', Like_list)
-    comment_data = serializers.serialize('json', Comment_list)
-    share_data = serializers.serialize('json', Share_list)
-    user_data = serializers.serialize('json', User_list)
-    data = "{ \"post_data\":" + post_data  + ",\"like_data\":" + like_data + ",\"comment_data\":" + comment_data +  ",\"share_data\":" + share_data + ",\"user_data\":" + user_data + "}"    
-    
-    return HttpResponse(data, content_type="application/json")
+def Blogs(request):
+    context = {}
+    Post_list = Post.objects.all().order_by('id').select_related('user').annotate(
+        count_likes=Count("tags", filter=Q(tags__tag='like')),
+        count_loves=Count("tags", filter=Q(tags__tag='love')),
+        count_sads=Count("tags", filter=Q(tags__tag='sad')),
+        count_comments=Count("comments"),
+        count_shares=Count("shares"),
+        )
+    context['posts'] = Post_list
+    return render(request, 'home.html', context)  
 
 
 def PageOfPostByUser(request, username):

@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import user_passes_test
 from django.core.exceptions import PermissionDenied
-from contents.models import Posts as Post
+from contents.models import Post
 
 def is_editor(user):
     return user.groups.filter(name="Editors").exists()

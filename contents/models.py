@@ -1,16 +1,30 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericRelation
 
 # Create your models here.
-class SharedFields(models.Model):
-    date_created = models.DateField()
-    date_updated = models.DateField(null=True)
+class Like(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    tag = models.CharField(max_length=20)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey("content_type", "object_id")
+    user = models.ForeignKey(User,  models.SET_NULL, blank=True, null=True)
+    created_date = models.DateField(null=True)
+    updated_date = models.DateField(null=True)    
+
+    def __str__(self):
+        return self.tag
 
     class Meta:
-        abstract = True
+        indexes = [
+            models.Index(fields=["content_type", "object_id"]),
+        ]
 
 
-class Posts(SharedFields):
+class Post(models.Model):
     LIST_OF_TYPE_POST = (
         ('Private', 'Private'),
         ('Public', 'Public')
@@ -18,45 +32,42 @@ class Posts(SharedFields):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=120)
     post_content = models.TextField()   
-    post_type = models.CharField(max_length=40, choices=LIST_OF_TYPE_POST) 
-    link = models.CharField(max_length=100)  
+    post_type = models.CharField(max_length=40, choices=LIST_OF_TYPE_POST)
+    tags = GenericRelation(Like)
+    link = models.SlugField(default="", null=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date_created = models.DateField()
+    date_updated = models.DateField(null=True)
 
     @property
     def username(self):
         return self.user.username
 
     class Meta:  
-        db_table = "post"        
+        db_table = "posts"        
 
 
-class Likes(SharedFields):
-    id = models.AutoField(primary_key=True)
-    type_of_like = models.CharField(max_length=120)
-    post_liked_link = models.CharField(max_length=80)
-    post = models.ForeignKey(Posts, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    class Meta:  
-        db_table = "likes"        
-
-
-class Comments(SharedFields):
+class Comment(models.Model):
     id = models.AutoField(primary_key=True)
     comment = models.TextField(default='Without comment')   
     post_commented_link = models.CharField(max_length=80)
-    post = models.ForeignKey(Posts, on_delete=models.CASCADE)
+    tags = GenericRelation(Like)
+    post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date_created = models.DateField()
+    date_updated = models.DateField(null=True)
 
     class Meta:  
         db_table = "comments"     
 
 
-class Shares(SharedFields):
+class Share(models.Model):
     id = models.AutoField(primary_key=True)
     post_shared_link = models.CharField(max_length=80)
-    post = models.ForeignKey(Posts, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, related_name='shares', on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date_created = models.DateField()
+    date_updated = models.DateField(null=True)
 
     class Meta:  
         db_table = "shares"       
