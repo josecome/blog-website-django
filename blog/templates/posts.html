@@ -1,8 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Posts of User{% endblock %}
+{% block title %}User Posts{% endblock %}
 {% block content %}
-    <div id="app" style="width: 80%; padding: 20px;">
-        <div v-for="p in posts"
+<h1 style="background-color: white;">Posts of User: <strong>{{ user_posts }}</strong></h1>
+{% for post in posts %}
+        <div
              class="div_content_style"
              style="background-color: white;
                     margin: 16px;
@@ -12,24 +13,33 @@
                 <tbody>
                     <tr>
                         <td>
-                            <a :href="'/posts/post/' + p.fields.link" class="classUserProfile">[[ p.fields.title ]]</a>
+                            <a href="" class="userstylepic">
+                                <strong style="color: white;">{{ post.user|make_list|first }}</strong>
+                            </a>
+                            <a href="/posts/post/{{ post.link }}" class="classUserProfile">{{ post.title }}</a>
                             <br />
-                            <span class="timeOfPost">0 days</span>
+                            <span class="timeOfPost">{{ post.date_created }}</span>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            [[ p.fields.post_content.slice(0, 200) + "..." ]]
+                            {{ post.post_content|truncatechars:200 }}...
                             <br />
-                            <span class="likesclass">
-                                <i class="bi bi-hand-thumbs-up"></i>
-                            </span> [[ search(p.pk, postlikes, 'likes') ]]
-                            <span class="commentMargin">
-                                <i class="bi bi-chat-left"></i>
-                            </span> [[ search(p.pk, postcomments, 'comments') ]]
-                            <span class="shareMargin">
-                                <i class="bi bi-share"></i>
-                            </span> [[ search(p.pk, postshares, 'shares') ]]
+                            <i class="bi bi-hand-thumbs-up" style="padding-right: 10px">
+                                {{ post.count_likes }}
+                              </i>
+                              <i class="bi bi bi-heart" style="padding-right: 10px">
+                                {{ post.count_loves }}
+                              </i>
+                              <i class="bi bi-hand-thumbs-down" style="padding-right: 10px">
+                                {{ post.count_sads }}
+                              </i>
+                              <i class="bi bi-chat-left" style="padding-right: 10px">
+                                {{ post.count_comments }}
+                              </i>
+                              <i class="bi bi-share">
+                                {{ post.count_shares }}
+                              </i>
                         </td>
                     </tr>
                     <tr>
@@ -39,9 +49,9 @@
                     </tr>
                     <tr>
                         <td>
-                            <i class="bi bi-hand-thumbs-up" onClick="() => sendData('like', p.pk)"></i> Like
-                            <i class="bi bi-chat-left" class="optionsclass"></i> comment
-                            <i class="bi bi-share" class="optionsclass"></i> share
+                            <i class="bi bi-hand-thumbs-up" oncick="sendData('like', p.pk)"></i> Like
+                            <i class="bi bi-chat-left optionsclass"></i> comment
+                            <i class="bi bi-share optionsclass"></i> share
                         </td>
                     </tr>
                     <tr>
@@ -51,28 +61,27 @@
                     </tr>
                     <tr>
                         <td>
-                            <label class="userclassPic2 " class="centerText">
-                                <span>[[ p.fields.topic ]]</span>
+                            <label class="userclassPic2 centerText">
+                                <span>{{ request.user.get_username }}</span>
                             </label>
                             <div class="divcommentclass, container ">
                                 <input type="text"
                                        class="commentclass, content "
-                                       onChange="(e) => { setPostCommenttxt(e.target.value)}"
+                                       onchange=""
                                        placeholder="Write a comment..." />
                                 <span class="commenticons, sidecontent ">
-                                    <i class="bi bi-emoji-smile" class="optionsclass "></i>
-                                    <i class="bi bi-image" class="optionsclass "></i>
-                                    <i class="bi bi-hand-thumbs-up" class="optionsclass "></i>
-                                    <i class="bi bi-hand-thumbs-down" class="optionsclass "></i>
-                                    <i class="bi bi-heart" class="optionsclass "></i>
-                                    <i class="bi bi-handbag" class="optionsclass "></i>
+                                    <i class="bi bi-emoji-smile optionsclass"></i>
+                                    <i class="bi bi-image optionsclass"></i>
+                                    <i class="bi bi-hand-thumbs-up optionsclass"></i>
+                                    <i class="bi bi-hand-thumbs-down optionsclass"></i>
+                                    <i class="bi bi-heart optionsclass"></i>
+                                    <i class="bi bi-handbag optionsclass"></i>
                                 </span>
                             </div>
-                            <i class="bi bi-send"
-                               class="btnSendComment "
+                            <i class="bi bi-send btnSendComment"
                                title="Post Comment"
-                               onClick="() => sendData('comment', p.pk)">
-                                <span class="removeclass ">Post</span>
+                               onclick="">
+                                <span class="removeclass">Post</span>
                             </i>
                         </td>
                     </tr>
@@ -81,153 +90,6 @@
             <br />
             <br />
         </div>
-    </div>
-    <script>
-        const {
-            createApp,
-            ref,
-            onMounted
-        } = Vue
-
-        createApp({
-            delimiters: ['[[', ']]'],
-            setup() {
-                const posts = ref([])
-                const postlikes = ref([]);
-                const postcomments = ref([]);
-                const postshares = ref([]);
-                const useratributes = ref([]);
-                const commenttxt = ref('');
-                const posts_user = ref([])
-                const initialState = ref(false);
-                const path = window.location.pathname.replace('/posts/', '');
-                const pathname = ref(path)
-
-                onMounted(() => {
-                    if (!initialState.value) {
-                        axios.get(`/postscontent/${ pathname.value }`).then((data) => {
-                            var posts_data = data.data.post_data
-                            var likes_data = data.data.like_data
-                            var comments_data = data.data.comment_data
-                            var shares_data = data.data.share_data
-                            console.log("============vvvv======================")
-                            console.log(posts_data)
-                            posts.value = posts_data;
-                            postlikes.value = likes_data
-                            postcomments.value = comments_data
-                            postshares.value = shares_data
-
-                            let postids = posts_data.map(i => {
-                                return i.fields.user
-                            })
-                            let ids_of_posts = String(postids.filter(onlyUnique))
-                            loadUserAtrib(ids_of_posts);
-                        });
-                        initialState.value = true
-                    }
-                })
-                const search = (k, arr, tp) => {
-                    console.log('======')
-                    var total = 0;
-                    for (let i = 0; i < arr.length; i++) {
-                        var arr_fields = arr[i].fields
-                        arr_fields.post === k ? total += 1 : total += 0;
-                        console.log(arr_fields.post)
-                    }
-
-                    return total || 0
-                };
-
-                function onlyUnique(value, index, array) {
-                    return array.indexOf(value) === index;
-                };
-                async function loadUserAtrib(ids_of_posts) {
-                    await axios.get('/useratrib/', {
-                        params: {
-                            ids: ids_of_posts
-                        }
-                    }).then((data) => {
-                        var arr = {};
-                        let v = data.data.split(';')
-                        for (var i = 0; i < v.length; i++) {
-                            var s = v[i].split(':');
-                            if (s[0] === null || s[0] === '' || s[0] === 'null' || typeof s[0] === 'undefined') {
-                                break;
-                            }
-                            arr[s[0].trim()] = s[1].trim();
-                        }
-                        useratributes.value = arr
-                        console.log('User: ' + useratributes.value)
-                    })
-                }
-
-                async function getData(pg) {
-                    /*await axios.get(pg).then((data) => {
-                        var arr = {};
-                        let v = data.data.split(';')
-                        for (var i = 0; i < v.length; i++) {
-                             var s = v[i].split(':');
-                             if(i < 6){console.log('ssss:' + s[i])}
-                             if(s[0] === null || s[0] === '' || s[0] === 'null' || typeof s[0] === 'undefined') {
-                                 break;
-                             }
-                             arr[s[0].trim()] = s[1].trim();
-                         }
-                         if(pg === "postlikes") {
-                            postlikes.value = arr;                    
-                         }
-                         else if(pg === "postcomments") {
-                             postcomments.value = arr; 
-                         }
-                         
-                     })*/
-                };
-                async function sendData(vtype_of_like, vpost_id) {
-                    let rs_response = ""
-                    let link = ""
-
-                    if (vtype_of_like === "like") {
-                        link = "/addremovelike/"
-                    } else if (vtype_of_like === "comment") {
-                        link = "/addcomment/"
-                    }
-                    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-                    const v = {
-                        "post_id": vpost_id,
-                        "type_of_like": vtype_of_like,
-                        "txt": commenttxt
-                    }
-                    await axios.post(link, v, {
-                            headers: {
-                                'X-CSRFToken': csrftoken
-                            }
-                        })
-                        .then((response) => {
-                            rs_response = response.data
-                            console.log("rs: " + rs_response)
-                            if (vtype_of_like === "like") {
-                                getData("postlikes");
-                            } else if (vtype_of_like === "comment") {
-                                getData("postcomments");
-                            }
-                        }, (error) => {
-                            rs_response = error;
-                        });
-                }
-
-                return {
-                    posts,
-                    postlikes,
-                    postcomments,
-                    postshares,
-                    useratributes,
-                    commenttxt,
-                    posts_user,
-                    initialState,
-                    search,
-                    pathname
-                }
-            }
-        }).mount('#app')
-    </script>
+        {% endfor %}
 {% endblock content %}
+

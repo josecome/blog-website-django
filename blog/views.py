@@ -76,28 +76,24 @@ def Blogs(request):
         count_shares=Count("shares"),
         )
     context['posts'] = Post_list
+
     return render(request, 'home.html', context)  
 
 
 def PageOfPostByUser(request, username):
-    return render(request, 'posts.html')
+    context = {}
+    Post_list = Post.objects.filter(user__username=username).select_related('user').order_by('id').select_related('user').annotate(
+        count_likes=Count("tags", filter=Q(tags__tag='like')),
+        count_loves=Count("tags", filter=Q(tags__tag='love')),
+        count_sads=Count("tags", filter=Q(tags__tag='sad')),
+        count_comments=Count("comments"),
+        count_shares=Count("shares"),
+        )
+    context['posts'] = Post_list
+    context['user_posts'] = f'{Post_list[0].user.first_name} {Post_list[0].user.last_name}'
+    
+    return render(request, 'posts.html', context)
 
-
-def PostbyUser(request, username):
-    user_id = int(User.objects.get(username=username).pk)
-
-    Post_list = Post.objects.filter(user_id=user_id)
-    Like_list = Like.objects.filter(post_id__in=Post_list.values('id'))
-    Comment_list = Comment.objects.filter(post_id__in=Post_list.values('id'))
-    Share_list = Share.objects.filter(post_id__in=Post_list.values('id'))
-
-    post_data = serializers.serialize('json', Post_list)
-    like_data = serializers.serialize('json', Like_list)
-    comment_data = serializers.serialize('json', Comment_list)
-    share_data = serializers.serialize('json', Share_list)
-    data = "{ \"post_data\":" + post_data + ",\"like_data\":" + like_data + ",\"comment_data\":" + comment_data  +  ",\"share_data\":" + share_data + "}"  
-
-    return HttpResponse(data, content_type="application/json")
 
 def getPostPage(request, link):
     return render(request, 'post.html', {'link': link})
