@@ -96,22 +96,19 @@ def PageOfPostByUser(request, username):
 
 
 def getPostPage(request, link):
-    return render(request, 'post.html', {'link': link})
-
-
-def getPostDataByLink(request, link):
-    Post_list = Post.objects.filter(link=link)
-    Like_list = Like.objects.filter(post_id__in=Post_list.values('id'))
-    Comment_list = Comment.objects.filter(post_id__in=Post_list.values('id'))
-    Share_list = Share.objects.filter(post_id__in=Post_list.values('id'))
-
-    post_data = serializers.serialize('json', Post_list)
-    like_data = serializers.serialize('json', Like_list)
-    comment_data = serializers.serialize('json', Comment_list)
-    share_data = serializers.serialize('json', Share_list)
-    data = "{ \"post_data\":" + post_data + ",\"like_data\":" + like_data + ",\"comment_data\":" + comment_data  +  ",\"share_data\":" + share_data + "}"   
+    context = {}
+    Post_list = Post.objects.filter(link=link).select_related('user').order_by('id').select_related('user').annotate(
+        count_likes=Count("tags", filter=Q(tags__tag='like')),
+        count_loves=Count("tags", filter=Q(tags__tag='love')),
+        count_sads=Count("tags", filter=Q(tags__tag='sad')),
+        count_comments=Count("comments"),
+        count_shares=Count("shares"),
+        )
+    context['posts'] = Post_list
+    context['user_posts'] = f'{Post_list[0].user.first_name} {Post_list[0].user.last_name}'
+    context['link'] = link
     
-    return HttpResponse(data, content_type="application/json")
+    return render(request, 'post.html', context)
 
 
 def getUserAtrib(request):
