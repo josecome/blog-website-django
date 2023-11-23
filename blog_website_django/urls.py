@@ -24,6 +24,8 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from rest_framework.routers import DefaultRouter
+from rest_framework import routers
+router = routers.SimpleRouter()
 
 urlpatterns = [
     path('', views.Blogs, name="home"),
@@ -38,34 +40,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('logout/', views.logout_view, name='logout'),
     path('register/', views.registrationPage, name='register'),
-    #path('content/<int:id>', views.Content, name="content"),
     path('content/<str:lnk>', views.Content, name="content"),
     path('change-password/', auth_views.PasswordChangeView.as_view()),
     path('contents/', include('contents.urls')),
-
-    # API auth
-    path('api/auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-
-    # API (Getting Data)
-    path('api/useratrib/', api_views.UserAtributes.as_view()), 
-    path('api/posts_list/', api_views.getMultiplePostData.as_view()),
-    path('api/user_posts/<str:user>', api_views.getPostDataByUser.as_view()),
-    path('api/posts/likes/', api_views.getMultipleLikesData.as_view()),
-    path('api/posts/comments/', api_views.getMultipleCommentsData.as_view()),
-    path('api/posts/shares/', api_views.getMultipleSharesData.as_view()),
-    path('api/posts/count_likes/', api_views.CountPostLikes.as_view()),
-    path('api/posts/count_comments/', api_views.CountPostComments.as_view()),
-    path('api/posts/count_shares/', api_views.CountPostShares.as_view()),
-
-    path('api/postdata/<str:lnk>', api_views.getPostDataByLink.as_view()),
-    path('api/post/<int:pk>/likes/', api_views.getLikesData.as_view()),
-    path('api/post/<int:pk>/comments/', api_views.getCommentsData.as_view()),
-    path('api/post/<int:pk>/shares/', api_views.getSharesData.as_view()),
+    path('api/', include('api.urls')),
 ]
-
-router = DefaultRouter()
-router.register(r'api/user', api_views.UserViewData, basename="user"),
-
-urlpatterns += router.urls
