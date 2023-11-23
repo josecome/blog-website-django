@@ -20,6 +20,7 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import (
     UserSerializer,
     PostSerializer,
+    PostByLinkSerializer,
     LikeSerializer,
     CommentSerializer,
     ShareSerializer,
@@ -46,15 +47,55 @@ class getMultiplePostData(viewsets.ModelViewSet):
 
 
 # Multiple Posts of specific user
-class getPostDataByUser(generics.ListAPIView):
+class getPostDataByUser(viewsets.ModelViewSet):
     serializer_class = PostSerializer
-    lookup_url_kwarg = "user"
+    queryset = Post.objects.all().annotate(
+        count_likes=Count("tags", filter=Q(tags__tag='like')),
+        count_loves=Count("tags", filter=Q(tags__tag='love')),
+        count_sads=Count("tags", filter=Q(tags__tag='sad')),
+        count_comments=Count("comments"),
+        count_shares=Count("shares"),
+        )[:4]
+    
+    def get_queryset(self):
+        username = self.kwargs['username']
+        if username:
+            self.queryset = Post.objects.filter(user__username=username).annotate(
+                count_likes=Count("tags", filter=Q(tags__tag='like')),
+                count_loves=Count("tags", filter=Q(tags__tag='love')),
+                count_sads=Count("tags", filter=Q(tags__tag='sad')),
+                count_comments=Count("comments"),
+                count_shares=Count("shares"),
+            )
+            return self.queryset
+        else:
+            return self.queryset
 
-    def get_queryset(self):        
-        user = self.kwargs.get(self.lookup_url_kwarg)
-        user_id = int(User.objects.get(username=user).pk)
-        post = Post.objects.filter(user=user_id)
-        return post
+
+# Data for Specific Post
+class getPostDataByLink(viewsets.ModelViewSet):
+    serializer_class = PostByLinkSerializer
+    queryset = Post.objects.all().annotate(
+        count_likes=Count("tags", filter=Q(tags__tag='like')),
+        count_loves=Count("tags", filter=Q(tags__tag='love')),
+        count_sads=Count("tags", filter=Q(tags__tag='sad')),
+        count_comments=Count("comments"),
+        count_shares=Count("shares"),
+        )[:4]
+    
+    def get_queryset(self):
+        id = self.kwargs['id']
+        if id:
+            self.queryset = Post.objects.filter(id=id).annotate(
+                count_likes=Count("tags", filter=Q(tags__tag='like')),
+                count_loves=Count("tags", filter=Q(tags__tag='love')),
+                count_sads=Count("tags", filter=Q(tags__tag='sad')),
+                count_comments=Count("comments"),
+                count_shares=Count("shares"),
+            )
+            return self.queryset
+        else:
+            return self.queryset
 
 
 # Post Atributes for Multiple Posts
@@ -83,17 +124,6 @@ class getMultipleSharesData(generics.ListAPIView):
         p = self.request.query_params.getlist('t', '')
         shares = Like.objects.filter(post__in=list(p))
         return shares
-
-
-# Data for Specific Post
-class getPostDataByLink(generics.ListAPIView):
-    serializer_class = PostSerializer
-    lookup_url_kwarg = "lnk"
-
-    def get_queryset(self):
-        lnk = self.kwargs.get(self.lookup_url_kwarg)
-        post = Post.objects.filter(link=lnk)
-        return post
 
 
 class getLikesData(generics.ListAPIView):
