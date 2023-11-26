@@ -43,7 +43,7 @@ class getMultiplePostData(viewsets.ModelViewSet):
         count_sads=Count("tags", filter=Q(tags__tag='sad')),
         count_comments=Count("comments"),
         count_shares=Count("shares"),
-        )[:2]
+        )[:12]
 
 
 # Multiple Posts of specific user
