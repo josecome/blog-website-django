@@ -26,6 +26,11 @@ from rest_framework_simplejwt.views import (
 from rest_framework.routers import DefaultRouter
 from rest_framework import routers
 router = routers.SimpleRouter()
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView # To verify Token
+)
 
 urlpatterns = [
     path('', views.Blogs, name="home"),
@@ -43,5 +48,8 @@ urlpatterns = [
     path('content/<str:lnk>', views.Content, name="content"),
     path('change-password/', auth_views.PasswordChangeView.as_view()),
     path('contents/', include('contents.urls')),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('api/', include('api.urls')),
 ]

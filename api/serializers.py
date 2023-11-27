@@ -66,3 +66,9 @@ class PostByLinkSerializer(serializers.ModelSerializer):
     class Meta:        
         model = Post
         fields = ["id", "title", "post_content", "post_type", "link", "username", "first_name", "last_name", "count_comments", "count_shares", "comments", "count_likes", "count_loves", "count_sads"]
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = "__all__"
