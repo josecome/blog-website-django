@@ -106,8 +106,12 @@ class CommentModelViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
 
     def create(self, request, *args, **kwargs):
-        cm = Comment(user_id=1)
-        serializer = self.serializer_class(cm, data=request.data)
+
+        server_data = {'user': request.user.id, 'date_created': date.today(), 'date_updated': date.today()}
+        comment_data = request.data
+
+        serializer = self.serializer_class(data = { **server_data, **comment_data})
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

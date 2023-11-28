@@ -49,8 +49,7 @@ class Post(models.Model):
 
 class Comment(models.Model):
     id = models.AutoField(primary_key=True)
-    comment = models.TextField(default='Without comment')   
-    post_commented_link = models.CharField(max_length=80)
+    comment = models.TextField(default='Without comment')
     tags = GenericRelation(Like)
     post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -63,7 +62,6 @@ class Comment(models.Model):
 
 class Share(models.Model):
     id = models.AutoField(primary_key=True)
-    post_shared_link = models.CharField(max_length=80)
     post = models.ForeignKey(Post, related_name='shares', on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date_created = models.DateField()

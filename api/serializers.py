@@ -26,13 +26,13 @@ class CommentSerializer(serializers.HyperlinkedModelSerializer):
     # tags = LikeSerializer(read_only=True, many=True)
     class Meta:
         model = Comment
-        fields = ["comment", "post_commented_link"]
+        fields = ["comment"]
 
 
 class ShareSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Share
-        fields = ["post_shared_link", "user"]
+        fields = ["user"]
 
 
 class PostSerializer(serializers.ModelSerializer):
