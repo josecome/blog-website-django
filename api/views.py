@@ -101,7 +101,6 @@ class getPostDataByLink(viewsets.ModelViewSet):
 
 
 class CommentModelViewSet(viewsets.ModelViewSet):
-    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = (IsAuthenticated,)
 
