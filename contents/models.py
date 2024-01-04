@@ -63,6 +63,7 @@ class Comment(models.Model):
 class Share(models.Model):
     id = models.AutoField(primary_key=True)
     post = models.ForeignKey(Post, related_name='shares', on_delete=models.CASCADE)
+    shared_with = models.ForeignKey(User, related_name='shareduser', on_delete=models.CASCADE, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date_created = models.DateField()
     date_updated = models.DateField(null=True)

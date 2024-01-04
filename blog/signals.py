@@ -10,24 +10,24 @@ from contents.models import (
 
 
 @receiver(post_save, sender=Post)
-def user_created(sender, instance, created, **kwargs):
+def post_created(sender, instance, created, **kwargs):
    if created:
       print('New Post created:', instance.title)
 
 
 @receiver(post_save, sender=Comment)
-def user_created(sender, instance, created, **kwargs):
+def comment_created(sender, instance, created, **kwargs):
    if created:
       print('New Comment created:', instance.comment)
 
 
 @receiver(post_save, sender=Like)
-def user_created(sender, instance, created, **kwargs):
+def like_created(sender, instance, created, **kwargs):
    if created:
       print('New Like added:', instance.tag)
 
 
 @receiver(post_save, sender=Share)
-def user_created(sender, instance, created, **kwargs):
+def share_created(sender, instance, created, **kwargs):
    if created:
       print('New Share created:', instance.date_created)

@@ -117,3 +117,21 @@ class CommentModelViewSet(viewsets.ModelViewSet):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class ShareModelViewSet(viewsets.ModelViewSet):
+    serializer_class = ShareSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def create(self, request, *args, **kwargs):
+
+        server_data = {'user': request.user.id, 'date_created': date.today(), 'date_updated': date.today()}
+        shared_with = request.data
+
+        serializer = self.serializer_class(data = { **server_data, **shared_with})
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
